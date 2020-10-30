@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://java.sun.com/jsf/html">
+<h:head/>
+<f:view>
+<!--    <h:outputLabel value="Hello, world"/>-->
+    <h1>GreatFinds</h1>
+    <h3>#{bean.randNum}</h3>
+    <h3>JSF Version: #{bean.JSFVersion}</h3>
+    <a href="entries.xhtml">Datatable test</a>
+    <a href="jsp_test.jsp">JSP test</a>
+    <br/>
+</f:view>
+
+<h:form>
+    <h:inputText value="#{bean.inputEntry.msg}"/>
+    <h:commandButton value="Post" ajax="true" action="#{bean.submit}">
+        <f:ajax execute="@form" render="@form entries"/>
+    </h:commandButton>
+</h:form>
+
+<br/>
+
+<h2>Content Feed</h2>
+<h:dataTable id="entries" value="#{bean.entries}" var="entry">
+    <h:column>#{entry.msg}</h:column>
+</h:dataTable>
+
+
+<!--doesn't work for now, suspected bug in JSF?-->
+<!--listen to websocket for changes and update entries when changed-->
+<!--<h:form>-->
+<!--    <f:websocket channel="pushCh" scope="view" onmessage="function(m){console.log(m);}">-->
+<!--        <f:ajax event="updateEntries" render="entries" />-->
+<!--    </f:websocket>-->
+<!--</h:form>-->
+</html>
