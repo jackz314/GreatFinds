@@ -1,3 +1,5 @@
+package datatable_test;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -6,7 +8,7 @@ import java.util.Arrays;
 
 @Named
 @ApplicationScoped
-public class UserData implements Serializable {
+public class UserDataBean implements Serializable {
    private static final long serialVersionUID = 1L;
    private String name;
    private String dept;

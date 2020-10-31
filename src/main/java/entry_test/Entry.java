@@ -1,3 +1,5 @@
+package entry_test;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,7 +16,7 @@ public class Entry {
     }
 
     public Entry() {
-
+        //default
     }
 
     public String getMsg() {

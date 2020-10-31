@@ -1,3 +1,5 @@
+package entry_test;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
@@ -13,14 +15,14 @@ import java.util.List;
 @FacesConfig(version = FacesConfig.Version.JSF_2_3)
 @Named
 @ApplicationScoped
-public class Bean {
+public class EntryBean {
 
     private Entry inputEntry;
 
     private List<Entry> entries;
 
     @Inject
-    private NotificationService service;
+    private EntryNotificationService service;
 
     @Inject @Push
     private PushContext pushCh;
@@ -56,13 +58,13 @@ public class Bean {
         System.out.println("NEW ENTRY: " + newEntry);
         entries.add(0, newEntry);
         pushCh.send("updateEntries");
-//        PushEP.sendAll("updateEntries");
+//        comm.PushEP.sendAll("updateEntries");
     }
 
     public List<Entry> getEntries() {
 //        entries = new LinkedList<>();
-//        entries.add(new Entry("Hello"));
-//        entries.add(new Entry("Test"));
+//        entries.add(new entry_test.Entry("Hello"));
+//        entries.add(new entry_test.Entry("Test"));
         System.out.println("ENTRIES: " + entries);
         return entries;
     }

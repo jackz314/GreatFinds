@@ -38,9 +38,10 @@
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
 
+<!--    xml config example-->
     <servlet>
         <servlet-name>BaseServlet</servlet-name>
-        <servlet-class>BaseServlet</servlet-class>
+        <servlet-class>servlets.BaseServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>BaseServlet</servlet-name>

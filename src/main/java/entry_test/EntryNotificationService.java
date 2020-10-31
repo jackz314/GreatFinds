@@ -1,3 +1,5 @@
+package entry_test;
+
 import javax.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -5,7 +7,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @Stateless
-public class NotificationService {
+public class EntryNotificationService {
 
     @Inject
     private EntityManager entityManager;
@@ -26,9 +28,9 @@ public class NotificationService {
     }
 
     public List<Entry> list() {
-//        List<Entry> l =  new LinkedList<>();
-//        l.add(new Entry("Hello"));
-//        l.add(new Entry("Test"));
+//        List<entry_test.Entry> l =  new LinkedList<>();
+//        l.add(new entry_test.Entry("Hello"));
+//        l.add(new entry_test.Entry("Test"));
 //        return l;
         return entityManager
             .createNamedQuery("msg", Entry.class)
