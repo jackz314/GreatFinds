@@ -1,4 +1,3 @@
-package servlets;
 import javax.persistence.*;
 import java.util.*;
 
