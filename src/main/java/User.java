@@ -16,6 +16,7 @@ public class User {
     public User(Long userID, String displayName, String email, String pwd, String bio) {
         this.userID = userID;
         this.displayName = displayName;
+        this.email = email;
         this.pwd = pwd;
         this.bio = bio;
         followedTags = new HashSet<String>();
@@ -24,17 +25,30 @@ public class User {
     public User() {
     }
 
-    public void updateDisplayName(String name) {
+    public void setDisplayName(String name) {
         this.displayName = name;
     }
-    public void updateEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
-    public void updatePwd(String pwd) {
+    public void setPwd(String pwd) {
         this.pwd = pwd;
     }
-    public void updateBio(String bio) {
+    public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public String getDisplayName(){
+        return displayName;
+    }
+    public String getEmail(){
+        return email;
+    }
+    public String getPwd(){
+        return pwd;
+    }
+    public String getBio(){
+        return bio;
     }
 
     public Long getUserID() {
