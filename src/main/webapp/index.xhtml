@@ -6,7 +6,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-<h:head/>
+
+<h:head>
+    <h:outputStylesheet name="css/styles.css"/>
+</h:head>
+
 <f:view>
 <!--    <h:outputLabel value="Hello, world"/>-->
     <h1>GreatFinds</h1>
@@ -30,6 +34,10 @@
 <h:dataTable id="entries" value="#{entryBean.entries}" var="entry">
     <h:column>#{entry.msg}</h:column>
 </h:dataTable>
+
+<p id="test">
+    Hello, this is the test of the css stuff. This text should be blue!
+</p>
 
 
 <!--doesn't work for now, suspected bug in JSF?-->
