@@ -35,6 +35,22 @@
     <h:column>#{entry.msg}</h:column>
 </h:dataTable>
 
+<!-- User Authentication Form(s) -->
+<h:form>
+    <h:inputText value="#{userBean.inputUser.displayName}"/>
+    <h:commandButton value="Post" ajax="true" action="#{userBean.submit}">
+        <f:ajax execute="@form" render="@form users"/>
+    </h:commandButton>
+</h:form>
+
+<br/>
+
+<h2>Content Feed</h2>
+<h:dataTable id="users" value="#{userBean.users}" var="user">
+    <h:column>#{user.displayName}</h:column>
+</h:dataTable>
+
+
 <p id="test">
     Hello, this is the test of the css stuff. This text should be blue!
 </p>
