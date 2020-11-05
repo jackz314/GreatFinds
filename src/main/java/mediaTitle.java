@@ -13,6 +13,13 @@ public class mediaTitle {
 
     private String title;
 
+    public mediaTitle(String title, String genre){
+        this.title = title;
+        this.genre = genre;
+    }
+
+    public mediaTitle(){}
+
     public String getGenre() {
         return genre;
     }
