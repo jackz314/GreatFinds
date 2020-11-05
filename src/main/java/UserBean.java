@@ -40,7 +40,9 @@ public class UserBean {
 
     public void submit(){
         service.create(inputUser.getDisplayName());
+        service.create(inputUser.getPwd());
         inputUser.setDisplayName("");
+        inputUser.setPwd("");
     }
 
     public String getJSFVersion() {

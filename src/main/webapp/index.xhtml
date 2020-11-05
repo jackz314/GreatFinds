@@ -35,9 +35,12 @@
     <h:column>#{entry.msg}</h:column>
 </h:dataTable>
 
+
 <!-- User Authentication Form(s) -->
+<h1>User Registration</h1>
 <h:form>
     <h:inputText value="#{userBean.inputUser.displayName}"/>
+    <h:inputText value="#{userBean.inputUser.pwd}"/>
     <h:commandButton value="Post" ajax="true" action="#{userBean.submit}">
         <f:ajax execute="@form" render="@form users"/>
     </h:commandButton>
@@ -45,9 +48,10 @@
 
 <br/>
 
-<h2>Content Feed</h2>
+<h2>List of Registered Users</h2>
 <h:dataTable id="users" value="#{userBean.users}" var="user">
     <h:column>#{user.displayName}</h:column>
+    <h:column>#{user.pwd}</h:column>
 </h:dataTable>
 
 
