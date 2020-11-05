@@ -10,7 +10,6 @@ public class mediaTitle {
     private Long mediaTitleID;
 
     private String genre;
-
     private String title;
 
     public mediaTitle(String title, String genre){
