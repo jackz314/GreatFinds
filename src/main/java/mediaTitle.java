@@ -2,6 +2,7 @@ import javax.persistence.*;
 import javax.persistence.Id;
 
 @Entity
+@Table(name = "TITLES")
 public class mediaTitle {
     //mediaTitleID, title, genre
 
