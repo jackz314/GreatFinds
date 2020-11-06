@@ -30,13 +30,17 @@
         <f:ajax execute="@form" render="@form entries"/>
     </h:commandButton>
 </h:form>
+
 <!-- User Authentication Form(s) -->
 <h:form>
     <h:inputText value="#{userBean.inputUser.displayName}"/>
-    <h:commandButton value="Login" ajax="true" action="#{userBean.submit}">
+    <h:inputText value="#{user.inputUser.email}"/>
+    <h:inputText value="#{userBean.inputUser.pwd}"/>
+    <h:commandButton value="Register" ajax="true" action="#{userBean.submit}">
         <f:ajax execute="@form" render="@form users"/>
     </h:commandButton>
 </h:form>
+
 <h:form>
     <h:inputText value="#{mainBean.inputPost.caption}" required="true" requiredMessage="Please enter a caption"/>
     <h:commandButton value="Submit Post" ajax="true" action="#{mainBean.submitPost}">
