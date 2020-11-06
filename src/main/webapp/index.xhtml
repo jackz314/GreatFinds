@@ -32,15 +32,19 @@
 </h:form>
 
 <!-- User Authentication Form(s) -->
+<h4>Registration</h4>
 <h:form>
-    <p>Username: <h:inputText value="#{userBean.inputUser.displayName}"/></p><br/>
-    <p>Email: <h:inputText value="#{userBean.inputUser.email}"/></p><br/>
-    <p>Password: <h:inputText value="#{userBean.inputUser.pwd}"/></p><br/>
+    <p>Username: <h:inputText value="#{userBean.inputUser.displayName}"/>
+        Email: <h:inputText value="#{userBean.inputUser.email}"/>
+        Password: <h:inputSecret value="#{userBean.inputUser.pwd}"/></p>
     <h:commandButton value="Register" ajax="true" action="#{userBean.submit}">
         <f:ajax execute="@form" render="@form users"/>
     </h:commandButton>
 </h:form>
 
+<br/>
+
+<h4>Create Post</h4>
 <h:form>
     <h:inputText value="#{mainBean.inputPost.caption}" required="true" requiredMessage="Please enter a caption"/>
     <h:commandButton value="Submit Post" ajax="true" action="#{mainBean.submitPost}">
