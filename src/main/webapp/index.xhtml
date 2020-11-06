@@ -34,12 +34,16 @@
 <!-- User Authentication Form(s) -->
 <h4>Registration</h4>
 <h:form>
-    <p>Username: <h:inputText value="#{userBean.inputUser.displayName}"/>
-        Email: <h:inputText value="#{userBean.inputUser.email}"/>
-        Password: <h:inputSecret value="#{userBean.inputUser.pwd}"/></p>
+    <p> Username: <h:inputText id="usernameInput" value="#{userBean.inputUser.displayName}" required="true" requiredMessage="Please enter a username. "/>
+        Email: <h:inputText id="emailInput" value="#{userBean.inputUser.email}" required="true" requiredMessage="Please enter a valid email. "/>
+        Password: <h:inputSecret id="pwdInput" value="#{userBean.inputUser.pwd}" required="true" requiredMessage="Please enter a password. "/></p>
+    <h:message for="usernameInput" style="color: red"/>
+    <h:message for="emailInput" style="color: red"/>
+    <h:message for="pwdInput" style="color: red"/>
     <h:commandButton value="Register" ajax="true" action="#{userBean.submit}">
         <f:ajax execute="@form" render="@form users"/>
     </h:commandButton>
+
 </h:form>
 
 <br/>
