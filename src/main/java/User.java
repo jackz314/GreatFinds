@@ -39,7 +39,7 @@ public class User {
     }
 
     public String getDisplayName(){
-        return displayName;
+        return displayName == null ?  "" : displayName;
     }
     public String getEmail(){
         return email;

@@ -3,7 +3,8 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
 
 <h:head>
     <h:outputStylesheet name="css/styles.css"/>
@@ -44,31 +45,34 @@
         </div>
 
         <div id="content-feed">
-            <div class="post">
-                <div class="username">User's name</div>
-                <div class="media-title-container">
-                    <div class="media-title">Name of the movie / tv show / etc.</div>
-                    <div class="rating">Rating: * * * * *</div>
+            <ui:repeat value="#{mainBean.posts}" var="post">
+                <div class="post">
+                    <div class="username">#{post.user.displayName}</div>
+                    <div class="media-title-container">
+                        <div class="media-title">Name of the movie / tv show / etc.</div>
+                        <div class="rating">#{post.rating}</div>
+                    </div>
+                    <div class="caption">#{post.caption}</div>
+                    <div class="tag-list">
+                        <div class="tag">tag 1</div>
+                        <div class="tag">tag 2</div>
+                    </div>
                 </div>
-                <div class="caption">This is a caption for movie or tv show.</div>
-                <div class="tag-list">
-                    <div class="tag">tag 1</div>
-                    <div class="tag">tag 2</div>
-                </div>
-            </div>
+            </ui:repeat>
 
-            <div class="post">
-                <div class="username">User's name</div>
-                <div class="media-title-container">
-                    <div class="media-title">Name of the movie / tv show / etc.</div>
-                    <div class="rating">Rating: * * * * *</div>
-                </div>
-                <div class="caption">This is a caption for movie or tv show.</div>
-                <div class="tag-list">
-                    <div class="tag">tag 1</div>
-                    <div class="tag">tag 2</div>
-                </div>
-            </div>
+
+<!--            <div class="post">-->
+<!--                <div class="username">User's name</div>-->
+<!--                <div class="media-title-container">-->
+<!--                    <div class="media-title">Name of the movie / tv show / etc.</div>-->
+<!--                    <div class="rating">Rating: * * * * *</div>-->
+<!--                </div>-->
+<!--                <div class="caption">This is a caption for movie or tv show.</div>-->
+<!--                <div class="tag-list">-->
+<!--                    <div class="tag">tag 1</div>-->
+<!--                    <div class="tag">tag 2</div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
 
     </div>
