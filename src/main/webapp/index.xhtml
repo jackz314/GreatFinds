@@ -33,9 +33,9 @@
 
 <!-- User Authentication Form(s) -->
 <h:form>
-    <h:inputText value="#{userBean.inputUser.displayName}"/>
-    <h:inputText value="#{user.inputUser.email}"/>
-    <h:inputText value="#{userBean.inputUser.pwd}"/>
+    <p>Username: <h:inputText value="#{userBean.inputUser.displayName}"/></p><br/>
+    <p>Email: <h:inputText value="#{userBean.inputUser.email}"/></p><br/>
+    <p>Password: <h:inputText value="#{userBean.inputUser.pwd}"/></p><br/>
     <h:commandButton value="Register" ajax="true" action="#{userBean.submit}">
         <f:ajax execute="@form" render="@form users"/>
     </h:commandButton>
