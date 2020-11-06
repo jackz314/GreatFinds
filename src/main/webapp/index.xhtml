@@ -35,17 +35,18 @@
 <h:form>
     <p>Username: <h:inputText value="#{userBean.inputUser.displayName}"/></p><br/>
     <p>Email: <h:inputText value="#{userBean.inputUser.email}"/></p><br/>
-    <p>Password: <h:inputText value="#{userBean.inputUser.pwd}"/></p><br/>
+    <p>Password: <h:inputSecret value="#{userBean.inputUser.pwd}"/></p><br/>
     <h:commandButton value="Register" ajax="true" action="#{userBean.submit}">
         <f:ajax execute="@form" render="@form users"/>
     </h:commandButton>
 </h:form>
 
 <h:form>
-    <h:inputText value="#{mainBean.inputPost.caption}" required="true" requiredMessage="Please enter a caption"/>
+    <h:inputText id="postInput" value="#{mainBean.inputPost.caption}" required="true" requiredMessage="Please enter a caption"/>
     <h:commandButton value="Submit Post" ajax="true" action="#{mainBean.submitPost}">
         <f:ajax execute="@form" render="@form feed"/>
     </h:commandButton>
+    <h:message for="postInput" style="color: red"/>
 </h:form>
 
 <br/>
