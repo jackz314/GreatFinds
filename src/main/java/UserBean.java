@@ -39,8 +39,10 @@ public class UserBean {
     }
 
     public void submit(){
-        service.create(inputUser.getDisplayName());
+        service.create(inputUser.getDisplayName(), inputUser.getEmail(), inputUser.getPwd());
         inputUser.setDisplayName("");
+        inputUser.setEmail("");
+        inputUser.setPwd("");
     }
 
     public String getJSFVersion() {
@@ -56,7 +58,7 @@ public class UserBean {
     public void onNewUser(@Observes User newUser) {
         System.out.println("NEW USER: " + newUser);
         users.add(0, newUser);
-        pushCh.send("updateEntries");
+        pushCh.send("updateUsers");
 //        comm.PushEP.sendAll("updateEntries");
     }
 

@@ -3,6 +3,7 @@ import javax.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.util.LinkedList;
 import java.util.List;
 
 @Stateless
@@ -14,10 +15,12 @@ public class UserNotificationService {
     @Inject
     private BeanManager beanManager;
 
-    public void create(String displayName) {
+    public void create(String displayName, String email, String pwd) {
         User newUser = new User();
         newUser.setDisplayName(displayName);
         entityManager.getTransaction().begin();
+        newUser.setEmail(email);
+        newUser.setPwd(pwd);
         entityManager.persist(newUser);
         entityManager.getTransaction().commit();
         beanManager.fireEvent(newUser);
@@ -36,7 +39,7 @@ public class UserNotificationService {
 //        l.add(new user_test.User("Test"));
 //        return l;
         return entityManager
-                .createNamedQuery("User.getAllUsers", User.class)
+                .createNamedQuery("userinfo", User.class)
                 .getResultList();
     }
 

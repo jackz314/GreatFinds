@@ -3,8 +3,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
-@NamedQuery(name = "User.getAllUsers", query = "SELECT u from User u")
+@NamedQuery(name = "userinfo", query = "SELECT u from User u")
 public class User {
 
     @Id
@@ -16,12 +15,10 @@ public class User {
     @ElementCollection
     private Set<String> followedTags;
 
-    public User(Long userID, String displayName, String email, String pwd, String bio) {
-        this.userID = userID;
+    public User(String displayName, String email, String pwd) {
         this.displayName = displayName;
         this.email = email;
         this.pwd = pwd;
-        this.bio = bio;
         followedTags = new HashSet<String>();
     }
 
@@ -63,5 +60,16 @@ public class User {
     }
     public void unfollowTag(String tag) {
         followedTags.remove(tag);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name=" + displayName +
+                ", email='" + email +
+                ", pwd='" + pwd +
+                ", bio='" + bio +
+                ", followedTags='" + followedTags +'\'' +
+                '}';
     }
 }
