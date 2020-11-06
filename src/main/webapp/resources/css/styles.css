@@ -1,7 +1,85 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* feed.xhtml */
+#navbar {
+    height: 50px;
+    background-color: lightblue;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+#logo {
+    font-size: 20pt;
+}
+
+#nav-right {
+    text-align: right;
+}
+
+
+#feed-container {
+    display: flex;
+}
+
+#sidebar-search {
+    border-right: 2px solid darkgrey;
+    padding: 10px;
+}
+
+#content-feed {
+    padding: 10px;
+    width: 100%;
+}
+
+.post {
+    border: 2px solid grey;
+    background-color: lightgoldenrodyellow;
+    padding: 5px;
+    margin: 5px 0;
+}
+
+.post .username {
+    color: lightgrey;
+}
+
+.post .media-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post .media-title-container .media-title {
+    font-size: 2em;
+}
+
+.post .media-title-container .rating {
+}
+
+.post .caption {
+    font-style: italic;
+}
+
+.post .tag-list {
+    display: flex;
+}
+
+.post .tag {
+    background-color: lightblue;
+    margin: 0 2px;
+}
+/* end feed.xhtml */
+
+
+/* index.xhtml */
 #test {
     color: blue;
     border-style: dashed;
 }
+/* end index.xhtml */
 
 h2{
     text-align: center;
