@@ -1,24 +1,23 @@
 import javax.persistence.*;
-import javax.persistence.Id;
 
 @Entity
-@Table(name = "TITLES")
-public class mediaTitle {
+@Table(name = "mediaTitles")
+public class MediaTitle {
     //mediaTitleID, title, genre
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mediaTitleID;
 
     private String genre;
     private String title;
 
-    public mediaTitle(String title, String genre){
+    public MediaTitle(String title, String genre){
         this.title = title;
         this.genre = genre;
     }
 
-    public mediaTitle(){}
+    public MediaTitle(){}
 
     public String getGenre() {
         return genre;

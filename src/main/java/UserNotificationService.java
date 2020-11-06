@@ -17,12 +17,16 @@ public class UserNotificationService {
     public void create(String displayName) {
         User newUser = new User();
         newUser.setDisplayName(displayName);
+        entityManager.getTransaction().begin();
         entityManager.persist(newUser);
+        entityManager.getTransaction().commit();
         beanManager.fireEvent(newUser);
     }
 
     public void post(User user){
+        entityManager.getTransaction().begin();
         entityManager.persist(user);
+        entityManager.getTransaction().commit();
         beanManager.fireEvent(user);
     }
 
@@ -32,7 +36,7 @@ public class UserNotificationService {
 //        l.add(new user_test.User("Test"));
 //        return l;
         return entityManager
-                .createNamedQuery("msg", User.class)
+                .createNamedQuery("User.getAllUsers", User.class)
                 .getResultList();
     }
 

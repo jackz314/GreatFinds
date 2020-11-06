@@ -49,10 +49,17 @@
 <!--        </dependency>-->
 
 <!--        JPA - EclipseLink-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.persistence</groupId>-->
+<!--            <artifactId>eclipselink</artifactId>-->
+<!--            <version>2.7.7</version>-->
+<!--        </dependency>-->
+
+<!--        JPA - Hibernate-->
         <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>eclipselink</artifactId>
-            <version>2.7.7</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.4.23.Final</version>
         </dependency>
 
 <!--        MySQL-->
@@ -85,44 +92,44 @@
             </plugin>
 
 <!--            MySQL stuff-->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>sql-maven-plugin</artifactId>
-                <version>1.5</version>
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>sql-maven-plugin</artifactId>-->
+<!--                <version>1.5</version>-->
 
-                <dependencies>
-<!--                    MySQL jdbc driver -->
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>8.0.22</version>
-                    </dependency>
-                </dependencies>
+<!--                <dependencies>-->
+<!--&lt;!&ndash;                    MySQL jdbc driver &ndash;&gt;-->
+<!--                    <dependency>-->
+<!--                        <groupId>mysql</groupId>-->
+<!--                        <artifactId>mysql-connector-java</artifactId>-->
+<!--                        <version>8.0.22</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
 
-                <!-- specify your MySQL server config here -->
-                <configuration>
-                    <driver>com.mysql.cj.jdbc.Driver</driver>
-                    <url>jdbc:mysql://localhost:3306/</url>
-                    <username>root</username>
-                    <password>root</password>
-                </configuration>
+<!--                &lt;!&ndash; specify your MySQL server config here &ndash;&gt;-->
+<!--                <configuration>-->
+<!--                    <driver>com.mysql.cj.jdbc.Driver</driver>-->
+<!--                    <url>jdbc:mysql://localhost:3306/</url>-->
+<!--                    <username>root</username>-->
+<!--                    <password>root</password>-->
+<!--                </configuration>-->
 
-                <executions>
-                    <execution>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <!-- specific configuration for this execution -->
-                        <configuration>
-                            <!-- specify your SQL commands, can be all of the following configurations -->
-                            <url>jdbc:mysql://localhost:3306/</url>
-                            <autocommit>true</autocommit>
-                            <sqlCommand>create database if not exists GreatFindsDB</sqlCommand>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>process-resources</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>execute</goal>-->
+<!--                        </goals>-->
+<!--                        &lt;!&ndash; specific configuration for this execution &ndash;&gt;-->
+<!--                        <configuration>-->
+<!--                            &lt;!&ndash; specify your SQL commands, can be all of the following configurations &ndash;&gt;-->
+<!--                            <url>jdbc:mysql://localhost:3306/</url>-->
+<!--                            <autocommit>true</autocommit>-->
+<!--                            <sqlCommand>create database if not exists GreatFindsDB</sqlCommand>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>

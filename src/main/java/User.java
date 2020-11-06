@@ -1,11 +1,14 @@
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Table(name = "users")
+@NamedQuery(name = "User.getAllUsers", query = "SELECT u from User u")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userID;
 
     private String displayName, email, pwd, bio;

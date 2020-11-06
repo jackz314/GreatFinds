@@ -18,43 +18,57 @@
     <h3>JSF Version: #{entryBean.JSFVersion}</h3>
     <a href="entries.xhtml">Datatable test</a>
     <a href="jsp_test.jsp">JSP test</a>
+    <p id="test">
+        Hello, this is the test of the css stuff. This text should be blue!
+    </p>
     <br/>
 </f:view>
 
 <h:form>
     <h:inputText value="#{entryBean.inputEntry.msg}"/>
-    <h:commandButton value="Post" ajax="true" action="#{entryBean.submit}">
+    <h:commandButton value="Submit Entry" ajax="true" action="#{entryBean.submit}">
         <f:ajax execute="@form" render="@form entries"/>
+    </h:commandButton>
+</h:form>
+<!-- User Authentication Form(s) -->
+<h:form>
+    <h:inputText value="#{userBean.inputUser.displayName}"/>
+    <h:commandButton value="Login" ajax="true" action="#{userBean.submit}">
+        <f:ajax execute="@form" render="@form users"/>
+    </h:commandButton>
+</h:form>
+<h:form>
+    <h:inputText value="#{mainBean.inputPost.caption}" required="true" requiredMessage="Please enter a caption"/>
+    <h:commandButton value="Submit Post" ajax="true" action="#{mainBean.submitPost}">
+        <f:ajax execute="@form" render="@form feed"/>
     </h:commandButton>
 </h:form>
 
 <br/>
 
-<h2>Content Feed</h2>
+<h2>Entries</h2>
 <h:dataTable id="entries" value="#{entryBean.entries}" var="entry">
     <h:column>#{entry.msg}</h:column>
 </h:dataTable>
 
-<!-- User Authentication Form(s) -->
-<h:form>
-    <h:inputText value="#{userBean.inputUser.displayName}"/>
-    <h:commandButton value="Post" ajax="true" action="#{userBean.submit}">
-        <f:ajax execute="@form" render="@form users"/>
-    </h:commandButton>
-</h:form>
-
 <br/>
 
-<h2>Content Feed</h2>
+<h2>User Table</h2>
 <h:dataTable id="users" value="#{userBean.users}" var="user">
     <h:column>#{user.displayName}</h:column>
 </h:dataTable>
 
-
-<p id="test">
-    Hello, this is the test of the css stuff. This text should be blue!
-</p>
-
+<h2>Content Feed</h2>
+<h:dataTable id="feed" value="#{mainBean.posts}" var="post">
+    <h:column><f:facet name = "header">Caption</f:facet>
+        #{post.caption}</h:column>
+    <h:column><f:facet name = "header">Time</f:facet>
+        #{post.timestamp}</h:column>
+    <h:column><f:facet name = "header">G-Score</f:facet>
+        #{post.rating}</h:column>
+    <h:column><f:facet name = "header">Likes</f:facet>
+        #{post.numLikes}</h:column>
+</h:dataTable>
 
 <!--doesn't work for now, suspected bug in JSF?-->
 <!--listen to websocket for changes and update entries when changed-->

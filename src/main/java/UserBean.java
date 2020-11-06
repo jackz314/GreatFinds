@@ -64,7 +64,7 @@ public class UserBean {
 //        entries = new LinkedList<>();
 //        entries.add(new user.User("Hello"));
 //        entries.add(new user.User("Test"));
-        System.out.println("USERS: " + users);
+//        System.out.println("USERS: " + users);
         return users;
     }
 

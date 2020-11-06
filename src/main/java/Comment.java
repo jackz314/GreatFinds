@@ -1,18 +1,24 @@
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "comments")
 public class Comment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentID;
-    private Long postID;
-    private Long userID;
+
+    @OneToOne
+    @JoinColumn(name = "userID")
+    private User user;
     private String text;
 
     //automatic timestamp
+    @Column(updatable = false)
+    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(updatable = false, insertable = false)
     private Date timestamp;
 
     //map to post
@@ -25,22 +31,6 @@ public class Comment {
 
     public void setCommentID(Long commentID) {
         this.commentID = commentID;
-    }
-
-    public Long getPostID() {
-        return postID;
-    }
-
-    public void setPostID(Long postID) {
-        this.postID = postID;
-    }
-
-    public Long getUserID() {
-        return userID;
-    }
-
-    public void setUserID(Long userID) {
-        this.userID = userID;
     }
 
     public String getText() {
@@ -59,5 +49,19 @@ public class Comment {
         this.post = post;
     }
 
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
 }

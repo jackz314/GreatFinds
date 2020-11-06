@@ -54,6 +54,7 @@ public class EntryBean {
         return r;
     }
 
+    //called when a new entry appears in the database
     public void onNewEntry(@Observes Entry newEntry) {
         System.out.println("NEW ENTRY: " + newEntry);
         entries.add(0, newEntry);
@@ -65,7 +66,7 @@ public class EntryBean {
 //        entries = new LinkedList<>();
 //        entries.add(new entry_test.Entry("Hello"));
 //        entries.add(new entry_test.Entry("Test"));
-        System.out.println("ENTRIES: " + entries);
+//        System.out.println("ENTRIES: " + entries);
         return entries;
     }
 

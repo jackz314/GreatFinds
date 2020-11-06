@@ -3,11 +3,11 @@ package entry_test;
 import javax.persistence.*;
 
 @Entity
-@NamedQuery(name = "msg", query = "SELECT e from Entry e")
+@NamedQuery(name = "getMsg", query = "SELECT e from Entry e")
 public class Entry {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String msg;
 
@@ -16,7 +16,7 @@ public class Entry {
     }
 
     public Entry() {
-        //default
+        //no-op
     }
 
     public String getMsg() {

@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 public class EntityManagerProducer {
 
   //inject from persistence.xml config, only possible with ejb support
-//  @PersistenceContext(unitName="default")
+//  @PersistenceContext(unitName="greatFindsMySQL")
   private EntityManager entityManager;
 
   @Produces
