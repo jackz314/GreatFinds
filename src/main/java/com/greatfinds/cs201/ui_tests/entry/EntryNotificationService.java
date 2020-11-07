@@ -1,4 +1,4 @@
-package entry_test;
+package com.greatfinds.cs201.ui_tests.entry;
 
 import javax.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
@@ -32,13 +32,13 @@ public class EntryNotificationService {
     }
 
     public List<Entry> list() {
-//        List<entry_test.Entry> l =  new LinkedList<>();
-//        l.add(new entry_test.Entry("Hello"));
-//        l.add(new entry_test.Entry("Test"));
+//        List<ui_tests.entry_test.Entry> l =  new LinkedList<>();
+//        l.add(new ui_tests.entry_test.Entry("Hello"));
+//        l.add(new ui_tests.entry_test.Entry("Test"));
 //        return l;
         return entityManager
-            .createNamedQuery("getMsg", Entry.class)
-            .getResultList();
+                .createNamedQuery("getMsg", Entry.class)
+                .getResultList();
     }
 
 }

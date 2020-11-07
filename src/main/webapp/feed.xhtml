@@ -45,7 +45,7 @@
         </div>
 
         <div id="content-feed">
-            <ui:repeat value="#{mainBean.posts}" var="post">
+            <ui:repeat value="#{globalBean.allPosts}" var="post">
                 <div class="post">
                     <div class="username">#{post.user.displayName}</div>
                     <div class="media-title-container">

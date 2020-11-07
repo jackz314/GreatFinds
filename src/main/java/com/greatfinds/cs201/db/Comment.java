@@ -1,3 +1,5 @@
+package com.greatfinds.cs201.db;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;

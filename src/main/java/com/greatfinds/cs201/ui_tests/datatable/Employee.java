@@ -1,4 +1,4 @@
-package datatable_test;
+package com.greatfinds.cs201.ui_tests.datatable;
 
 public class Employee {
    private String name;

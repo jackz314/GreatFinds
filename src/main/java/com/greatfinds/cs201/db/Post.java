@@ -1,12 +1,18 @@
+package com.greatfinds.cs201.db;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "posts")
-@NamedQuery(name = "getAllPosts", query = "SELECT p from Post p")
+@NamedQueries({
+        @NamedQuery(name = "getAllPosts", query = "SELECT p from Post p"),
+//    @NamedQuery(name = "getFollowedPosts", query = "SELECT p from Post p WHERE :tag MEMBER OF p.tags"),
+})
 public class Post {
 
     @Id
@@ -31,13 +37,13 @@ public class Post {
     private Date timestamp;
 
     @ElementCollection
-    private List<String> tags;
+    private Set<String> tags;
 
     //mapped in comment class
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    public Post(User user, MediaTitle mediaTitle, String caption, Integer rating, List<String> tags) {
+    public Post(User user, MediaTitle mediaTitle, String caption, Integer rating, Set<String> tags) {
         this.user = user;
         this.mediaTitle = mediaTitle;
         this.caption = caption;
@@ -47,6 +53,13 @@ public class Post {
 
     public Post() {
         rating = -1;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof Post)) return false;
+        return this.postID.equals(((Post) other).postID);
     }
 
     public void addComment(Comment comment) {
@@ -107,11 +120,11 @@ public class Post {
         return timestamp;
     }
 
-    public List<String> getTags() {
+    public Set<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(Set<String> tags) {
         this.tags = tags;
     }
 

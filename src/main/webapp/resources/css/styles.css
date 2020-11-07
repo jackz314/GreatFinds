@@ -71,6 +71,7 @@ body {
     background-color: lightblue;
     margin: 0 2px;
 }
+
 /* end feed.xhtml */
 
 
@@ -79,8 +80,13 @@ body {
     color: blue;
     border-style: dashed;
 }
+
+.errorMsg {
+    color: red;
+}
+
 /* end index.xhtml */
 
-h2{
+h2 {
     text-align: center;
 }

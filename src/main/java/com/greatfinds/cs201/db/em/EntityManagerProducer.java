@@ -1,4 +1,5 @@
-package em;
+package com.greatfinds.cs201.db.em;
+
 
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Produces;
@@ -13,6 +14,7 @@ public class EntityManagerProducer {
 
   @Produces
   public EntityManager entityManager(){
+
     if(entityManager == null) entityManager = EMF.createEntityManager();
     return entityManager;
   }

@@ -1,4 +1,4 @@
-package comm;
+package com.greatfinds.cs201.comm;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;

@@ -41,7 +41,7 @@
 <!--    xml config example-->
     <servlet>
         <servlet-name>BaseServlet</servlet-name>
-        <servlet-class>servlets.BaseServlet</servlet-class>
+        <servlet-class>com.greatfinds.cs201.servlets.BaseServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>BaseServlet</servlet-name>

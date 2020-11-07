@@ -5,14 +5,16 @@
 <!--suppress ELSpecValidationInJSP -->
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:o="http://omnifaces.org/ui"
+>
 
 <h:head>
     <h:outputStylesheet name="css/styles.css"/>
 </h:head>
 
 <f:view>
-<!--    <h:outputLabel value="Hello, world"/>-->
+    <!--    <h:outputLabel value="Hello, world"/>-->
     <h1>GreatFinds</h1>
     <h3>#{entryBean.randNum}</h3>
     <h3>JSF Version: #{entryBean.JSFVersion}</h3>
@@ -31,69 +33,107 @@
     </h:commandButton>
 </h:form>
 
+<p>Login status: #{userBean.loginStatus}</p>
+
 <!-- User Authentication Form(s) -->
-<h4>Registration</h4>
-<h:form>
-    <p> Username: <h:inputText id="usernameInput" value="#{userBean.inputUser.displayName}" required="true" requiredMessage="Please enter a username. "/>
-        Email: <h:inputText id="emailInput" value="#{userBean.inputUser.email}" required="true" requiredMessage="Please enter a valid email. "/>
-        Password: <h:inputSecret id="pwdInput" value="#{userBean.inputUser.pwd}" required="true" requiredMessage="Please enter a password. "/></p>
-    <h:message for="usernameInput" style="color: red"/>
-    <h:message for="emailInput" style="color: red"/>
-    <h:message for="pwdInput" style="color: red"/>
-    <h:commandButton value="Register" ajax="true" action="#{userBean.register}">
-        <f:ajax execute="@form" render="@form users"/>
-    </h:commandButton>
-</h:form>
+<h:panelGroup rendered="#{not userBean.userLoggedIn}">
+    <h4>Registration</h4>
+    <h:form binding="#{registerForm}">
+        <p> Username: <h:inputText id="usernameInput" value="#{userBean.registerUser.displayName}" required="true"
+                                   requiredMessage="Please enter a username."/>
+            Email: <h:inputText id="emailInput" value="#{userBean.registerUser.email}" required="true"
+                                requiredMessage="Please enter a valid email."
+                                validator="#{userBean.validateRegisterEmail}"/>
+            Password: <h:inputSecret id="pwdInput" value="#{userBean.registerUser.pwd}" required="true"
+                                     requiredMessage="Please enter a password."/>
+        </p>
+        <h:messages rendered="#{registerForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" id="reg_msgs"/>
+        <h:commandButton value="Register" ajax="true" action="#{userBean.register}">
+            <f:ajax execute="@form" render="@form users"/>
+        </h:commandButton>
+    </h:form>
 
-<h4>Login</h4>
-<h:form>
-    <p>
-    Email: <h:inputText id="emailLogin" value="#{userBean.loginUser.email}" required="true" requiredMessage="Please enter a valid email. "/>
-    Password: <h:inputSecret id="pwdLogin" value="#{userBean.loginUser.pwd}" required="true" requiredMessage="Please enter a password. "/></p>
-    <h:message for="emailLogin" style="color: red"/>
-    <h:message for="pwdLogin" style="color: red"/>
-    <h:commandButton value="Login" ajax="true" action="#{userBean.login}">
-        <f:ajax execute="@form" render="@form"/>
-    </h:commandButton>
-    <p>Login status: #{userBean.loginStatus}</p>
-</h:form>
+    <h4>Login</h4>
+    <h:form binding="#{loginForm}">
+        <p> Email: <h:inputText id="emailLogin" value="#{userBean.loginUser.email}" required="true"
+                                requiredMessage="Please enter a valid email. "
+                                validator="#{userBean.validateLoginEmail}"/>
+            Password: <h:inputSecret id="pwdLogin" value="#{userBean.loginUser.pwd}"
+                                     required="true" requiredMessage="Please enter a password. "/>
+        </p>
+        <o:validateMultiple components="emailLogin pwdLogin" validator="#{userBean.validateLogin}"
+                            message="Incorrect email or password."/>
+        <h:messages rendered="#{loginForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" redisplay="false"
+                    id="login_msgs"/>
+        <h:commandButton value="Login" ajax="true" action="#{userBean.login}">
+            <f:ajax execute="@form" render="@all"/>
+        </h:commandButton>
+    </h:form>
+
+    <br/>
+</h:panelGroup>
+
+<h:panelGroup rendered="#{userBean.userLoggedIn}">
+    <h:form>
+        Tags:
+        <h:inputText id="tagInput" value="#{userBean.tagStr}">
+            <f:ajax event="keyup" render="userFeed"/>
+        </h:inputText>
+        <br/>
+        <h:commandButton value="Log out" ajax="true" action="#{userBean.logOut}">
+            <f:ajax execute="@form" render="@all"/>
+        </h:commandButton>
+    </h:form>
+
+    <h4>Create Post</h4>
+    <h:form>
+        <h:inputText id="postInput" value="#{userBean.inputPost.caption}" required="true"
+                     requiredMessage="Please enter a caption"/>
+        <h:commandButton value="Submit Post" ajax="true" action="#{userBean.submitPost}">
+            <f:ajax execute="@form" render="@form userFeed globalFeed"/>
+        </h:commandButton>
+        <h:message for="postInput" style="color: red"/>
+    </h:form>
+</h:panelGroup>
 
 <br/>
 
-<h4>Create Post</h4>
-<h:form>
-    <h:inputText id="postInput" value="#{mainBean.inputPost.caption}" required="true" requiredMessage="Please enter a caption"/>
-    <h:commandButton value="Submit Post" ajax="true" action="#{mainBean.submitPost}">
-        <f:ajax execute="@form" render="@form feed"/>
-    </h:commandButton>
-    <h:message for="postInput" style="color: red"/>
-</h:form>
+<h2>Feed</h2>
+<h:dataTable id="userFeed" value="#{userBean.posts}" var="post">
+    <h:column><f:facet name="header">Caption</f:facet>
+        #{post.caption}</h:column>
+    <h:column><f:facet name="header">Time</f:facet>
+        #{post.timestamp}</h:column>
+    <h:column><f:facet name="header">G-Score</f:facet>
+        #{post.rating}</h:column>
+    <h:column><f:facet name="header">Likes</f:facet>
+        #{post.numLikes}</h:column>
+</h:dataTable>
 
 <br/>
+<p>Debugging info</p>
 
 <!--<h2>Entries</h2>-->
 <!--<h:dataTable id="entries" value="#{entryBean.entries}" var="entry">-->
 <!--    <h:column>#{entry.msg}</h:column>-->
 <!--</h:dataTable>-->
 
-<!--<br/>-->
-
 <h2>User Table</h2>
-<h:dataTable id="users" value="#{userBean.users}" var="user">
-    <h:column><f:facet name = "header">Name</f:facet>#{user.displayName}</h:column>
-    <h:column><f:facet name = "header">Email</f:facet>#{user.email}</h:column>
-    <h:column><f:facet name = "header">Password</f:facet>#{user.pwd}</h:column>
+<h:dataTable id="users" value="#{globalBean.allUsers}" var="user">
+    <h:column><f:facet name="header">Name</f:facet>#{user.displayName}</h:column>
+    <h:column><f:facet name="header">Email</f:facet>#{user.email}</h:column>
+    <h:column><f:facet name="header">Password</f:facet>#{user.pwd}</h:column>
 </h:dataTable>
 
-<h2>Content Feed</h2>
-<h:dataTable id="feed" value="#{mainBean.posts}" var="post">
-    <h:column><f:facet name = "header">Caption</f:facet>
+<h2>Global Feed</h2>
+<h:dataTable id="globalFeed" value="#{globalBean.allPosts}" var="post">
+    <h:column><f:facet name="header">Caption</f:facet>
         #{post.caption}</h:column>
-    <h:column><f:facet name = "header">Time</f:facet>
+    <h:column><f:facet name="header">Time</f:facet>
         #{post.timestamp}</h:column>
-    <h:column><f:facet name = "header">G-Score</f:facet>
+    <h:column><f:facet name="header">G-Score</f:facet>
         #{post.rating}</h:column>
-    <h:column><f:facet name = "header">Likes</f:facet>
+    <h:column><f:facet name="header">Likes</f:facet>
         #{post.numLikes}</h:column>
 </h:dataTable>
 

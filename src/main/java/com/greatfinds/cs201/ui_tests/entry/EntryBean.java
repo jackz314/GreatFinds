@@ -1,4 +1,4 @@
-package entry_test;
+package com.greatfinds.cs201.ui_tests.entry;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -64,8 +64,8 @@ public class EntryBean {
 
     public List<Entry> getEntries() {
 //        entries = new LinkedList<>();
-//        entries.add(new entry_test.Entry("Hello"));
-//        entries.add(new entry_test.Entry("Test"));
+//        entries.add(new ui_tests.entry_test.Entry("Hello"));
+//        entries.add(new ui_tests.entry_test.Entry("Test"));
 //        System.out.println("ENTRIES: " + entries);
         return entries;
     }

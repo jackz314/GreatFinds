@@ -1,3 +1,5 @@
+package com.greatfinds.cs201.db;
+
 import javax.persistence.*;
 
 @Entity
@@ -26,6 +28,7 @@ public class MediaTitle {
     public String getTitle() {
         return title;
     }
+
     public Long getMediaTitleID() {
         return mediaTitleID;
     }
