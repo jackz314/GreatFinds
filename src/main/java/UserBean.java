@@ -3,7 +3,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.faces.annotation.FacesConfig;
-import javax.faces.context.FacesContext;
 import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
@@ -17,6 +16,9 @@ import java.util.List;
 public class UserBean {
 
     private User inputUser;
+    private User loginUser;
+    private boolean isUserLoggedIn = false;
+    private boolean userMatched = true;
 
     private List<User> users;
 
@@ -31,6 +33,7 @@ public class UserBean {
 //        String version = getJSFVersion();
 //        System.out.println("JSF Version: " + version);
         inputUser = new User();
+        loginUser = new User();
         users = service.list();
     }
 
@@ -38,21 +41,25 @@ public class UserBean {
         return inputUser;
     }
 
-    public void submit(){
+    public User getLoginUser() {
+        return loginUser;
+    }
+
+    public void register(){
         service.create(inputUser.getDisplayName(), inputUser.getEmail(), inputUser.getPwd());
         inputUser.setDisplayName("");
         inputUser.setEmail("");
         inputUser.setPwd("");
     }
 
-    public String getJSFVersion() {
-        return FacesContext.class.getPackage().getImplementationVersion();
+    public void login(){
+        userMatched = isUserLoggedIn = service.userMatch(loginUser.getEmail(), loginUser.getPwd());
     }
 
-    public double getRandNum(){
-        double r = Math.random();
-        System.out.println(r);
-        return r;
+    public String getLoginStatus(){
+        String status = isUserLoggedIn ? "logged in!" : "not logged in.";
+        if(!userMatched) status += " user not found or password is incorrect";
+        return status;
     }
 
     public void onNewUser(@Observes User newUser) {

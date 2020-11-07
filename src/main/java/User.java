@@ -3,7 +3,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@NamedQuery(name = "userinfo", query = "SELECT u from User u")
+@NamedQuery(name = "userInfo", query = "SELECT u from User u")
+@NamedQuery(name = "userMatch", query = "SELECT count(u) from User u WHERE u.email = :email AND u.pwd = :pwd")
 public class User {
 
     @Id
