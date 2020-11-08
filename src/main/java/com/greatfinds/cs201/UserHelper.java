@@ -22,7 +22,6 @@ public class UserHelper {
     public void registerUser(String displayName, String email, String pwd) {
         User user = new User(displayName, email, pwd);
         registerUser(user);
-
     }
 
     public void registerUser(User user) {
@@ -68,5 +67,4 @@ public class UserHelper {
     private void beginSession() {
         entityManager.getTransaction().begin();
     }
-
 }
