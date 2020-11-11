@@ -4,6 +4,9 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "mediaTitles")
+@NamedQueries({
+        @NamedQuery(name = "getAllMediaTitles", query = "SELECT m from MediaTitle m")
+})
 public class MediaTitle {
     //mediaTitleID, title, genre
 
@@ -29,6 +32,8 @@ public class MediaTitle {
         return title;
     }
 
+    public void setTitle(String title) { this.title = title; }
+
     public Long getMediaTitleID() {
         return mediaTitleID;
     }
@@ -39,9 +44,5 @@ public class MediaTitle {
 
     public void setGenre(String genre) {
         this.genre = genre;
-    }
-
-    public void setPostID(String title) {
-        this.title = title;
     }
 }

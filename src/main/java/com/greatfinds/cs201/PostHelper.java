@@ -35,8 +35,6 @@ public class PostHelper {
         Set<String> tags = extractTags(post.getCaption());
         tags.add("all");
         post.setTags(tags);
-        //post.setRating();
-        //post.setMediaTitle();
         beginSession();
         entityManager.persist(post);
         commit();

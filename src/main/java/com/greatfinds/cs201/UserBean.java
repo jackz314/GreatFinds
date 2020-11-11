@@ -1,5 +1,6 @@
 package com.greatfinds.cs201;
 
+import com.greatfinds.cs201.db.MediaTitle;
 import com.greatfinds.cs201.db.Post;
 import com.greatfinds.cs201.db.User;
 
@@ -33,10 +34,11 @@ public class UserBean implements Serializable {
     @SuppressWarnings("CdiUnproxyableBeanTypesInspection")
     @Inject
     transient private PostHelper postHelper;
-
     private Post inputPost;
-
     private List<Post> posts;
+
+    transient private MediaTitleHelper mediaTitleHelper;
+    private MediaTitle inputMediaTitle;
 
     //same story as above
     @SuppressWarnings("CdiUnproxyableBeanTypesInspection")
@@ -50,6 +52,7 @@ public class UserBean implements Serializable {
         registerUser = new User();
         loginUser = new User();
         inputPost = new Post();
+        inputMediaTitle = new MediaTitle();
     }
 
     public User getRegisterUser() {
@@ -170,10 +173,17 @@ public class UserBean implements Serializable {
         return inputPost;
     }
 
+    public MediaTitle getInputMediaTitle() { return inputMediaTitle; }
+
     public void submitPost() {
         inputPost.setUser(loginUser);
         postHelper.post(inputPost);
         inputPost = new Post();
+    }
+
+    public void addMediaTitle() {
+        mediaTitleHelper.registerMediaTitle(inputMediaTitle);
+        inputMediaTitle = new MediaTitle();
     }
 
 }

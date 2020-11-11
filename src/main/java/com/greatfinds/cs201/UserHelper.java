@@ -19,11 +19,6 @@ public class UserHelper {
     @Inject
     private BeanManager beanManager;
 
-    public void registerUser(String displayName, String email, String pwd) {
-        User user = new User(displayName, email, pwd);
-        registerUser(user);
-    }
-
     public void registerUser(User user) {
         user.setFollowedTags(Collections.singleton("all"));
         beginSession();

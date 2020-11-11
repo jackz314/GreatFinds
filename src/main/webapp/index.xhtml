@@ -87,8 +87,13 @@
 
     <h4>Create Post</h4>
     <h:form>
-        <p> Title: <h:inputText id="mediaTitleInput" value="#{userBean.inputPost.mediaTitle.title}" required="true"
+        <h5>Add new media title:</h5>
+        <p> Title: <h:inputText id="titleInput" value="#{userBean.inputMediaTitle.title}" required="true"
                      requiredMessage="Please enter a mediaTitle"/>
+            Genre: <h:inputText id="genreInput" value="#{userBean.inputMediaTitle.genre}" required="true"
+                     requiredMessage="Please enter a genre"/>
+        </p>
+        <p>
             Caption: <h:inputText id="postInput" value="#{userBean.inputPost.caption}" required="true"
                      requiredMessage="Please enter a caption"/>
             Rating: <h:inputText id="ratingInput" value="#{userBean.inputPost.rating}" required="true"
@@ -99,7 +104,8 @@
         </h:commandButton>
         <h:message for="postInput" style="color: red"/>
         <h:message for="ratingInput" style="color: red"/>
-        <h:message for="mediaTitleInput" style="color: red"/>
+        <h:message for="titleInput" style="color: red"/>
+        <h:message for="genreInput" style="color: red"/>
     </h:form>
 </h:panelGroup>
 
