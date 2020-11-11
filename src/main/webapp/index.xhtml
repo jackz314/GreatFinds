@@ -87,12 +87,19 @@
 
     <h4>Create Post</h4>
     <h:form>
-        <h:inputText id="postInput" value="#{userBean.inputPost.caption}" required="true"
+        <p> Title: <h:inputText id="mediaTitleInput" value="#{userBean.inputPost.mediaTitle.title}" required="true"
+                     requiredMessage="Please enter a mediaTitle"/>
+            Caption: <h:inputText id="postInput" value="#{userBean.inputPost.caption}" required="true"
                      requiredMessage="Please enter a caption"/>
+            Rating: <h:inputText id="ratingInput" value="#{userBean.inputPost.rating}" required="true"
+                     requiredMessage="Please enter a rating"/>
+        </p>
         <h:commandButton value="Submit Post" ajax="true" action="#{userBean.submitPost}">
             <f:ajax execute="@form" render="@form userFeed globalFeed"/>
         </h:commandButton>
         <h:message for="postInput" style="color: red"/>
+        <h:message for="ratingInput" style="color: red"/>
+        <h:message for="mediaTitleInput" style="color: red"/>
     </h:form>
 </h:panelGroup>
 

@@ -1,12 +1,14 @@
 package com.greatfinds.cs201;
 
 import com.greatfinds.cs201.db.Post;
+import com.greatfinds.cs201.db.User;
 
 import javax.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -33,6 +35,8 @@ public class PostHelper {
         Set<String> tags = extractTags(post.getCaption());
         tags.add("all");
         post.setTags(tags);
+        //post.setRating();
+        //post.setMediaTitle();
         beginSession();
         entityManager.persist(post);
         commit();
