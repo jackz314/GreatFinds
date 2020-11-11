@@ -1,5 +1,6 @@
 package com.greatfinds.cs201;
 
+import com.greatfinds.cs201.db.MediaTitle;
 import com.greatfinds.cs201.db.Post;
 import com.greatfinds.cs201.db.User;
 
@@ -28,9 +29,14 @@ public class GlobalBean {
     @Inject
     private UserHelper userHelper;
 
+    @Inject
+    private MediaTitleHelper titleHelper;
+
     private List<Post> posts;
 
     private List<User> users;
+
+    private List<MediaTitle> titles;
 
     @Inject
     @Push
@@ -41,6 +47,7 @@ public class GlobalBean {
     public void load() {
         posts = postHelper.getAllPosts();
         users = userHelper.getAllUsers();
+        titles = titleHelper.getAllMediaTitles();
     }
 
     //called when a new post arrives, thread safe
@@ -62,8 +69,14 @@ public class GlobalBean {
     public void onNewUser(@Observes User newUser) {
         System.out.println("NEW USER: " + newUser);
         users.add(0, newUser);
-        pushCh.send("updateUsers");
-//       PushEP.sendAll("updateEntries");
+//        pushCh.send("updateUsers");
+//       PushEP.sendAll("updateUsers");
+    }
+
+    public void onNewTitle(@Observes MediaTitle title) {
+        System.out.println("NEW MEDIA TITLE: " + title);
+        titles.add(0, title);
+//        pushCh.send("updateTitles");
     }
 
     public List<User> getAllUsers() {
@@ -74,4 +87,7 @@ public class GlobalBean {
         return posts;
     }
 
+    public List<MediaTitle> getAllMediaTitles() {
+        return titles;
+    }
 }

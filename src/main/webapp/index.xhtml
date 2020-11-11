@@ -138,6 +138,12 @@
     <h:column><f:facet name="header">Password</f:facet>#{user.pwd}</h:column>
 </h:dataTable>
 
+<h2>Media Title Table</h2>
+<h:dataTable id="titles" value="#{globalBean.allMediaTitles}" var="title">
+    <h:column><f:facet name="header">Title</f:facet>#{title.title}</h:column>
+    <h:column><f:facet name="header">Genre</f:facet>#{title.genre}</h:column>
+</h:dataTable>
+
 <h2>Global Feed</h2>
 <h:dataTable id="globalFeed" value="#{globalBean.allPosts}" var="post">
     <h:column><f:facet name="header">Caption</f:facet>
