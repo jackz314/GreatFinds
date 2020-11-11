@@ -9,7 +9,7 @@
         <module name="GreatFinds" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="14">
       <module name="GreatFinds" target="14" />
     </bytecodeTargetLevel>
   </component>

@@ -182,7 +182,7 @@ public class UserBean implements Serializable {
     }
 
     public void addMediaTitle() {
-        mediaTitleHelper.registerMediaTitle(inputMediaTitle);
+        mediaTitleHelper.addNewMediaTitle(inputMediaTitle);
         inputMediaTitle = new MediaTitle();
     }
 

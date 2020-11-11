@@ -6,7 +6,6 @@ import javax.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,24 +27,24 @@ public class UserHelper {
     }
 
     public User getCompleteUser(User user) {
-        TypedQuery<User> query = entityManager.createNamedQuery("getUser", User.class);
-        query.setParameter("email", user.getEmail());
-        return query.getSingleResult();
+        return entityManager.createNamedQuery("getUser", User.class)
+                .setParameter("email", user.getEmail())
+                .getSingleResult();
     }
 
     // return true if user with specified email exists in DB
     public boolean userExists(String email) {
-        TypedQuery<Long> query = entityManager.createNamedQuery("userExists", Long.class);
-        query.setParameter("email", email);
-        return query.getSingleResult() == 1;
+        return entityManager.createNamedQuery("userExists", Long.class)
+                .setParameter("email", email)
+                .getSingleResult() == 1;
     }
 
     // return true if user with email & password match record in database
     public boolean userMatch(String email, String pwd) {
-        TypedQuery<Long> query = entityManager.createNamedQuery("userMatches", Long.class);
-        query.setParameter("email", email);
-        query.setParameter("pwd", pwd);
-        return query.getSingleResult() == 1;
+        return entityManager.createNamedQuery("userMatches", Long.class)
+                .setParameter("email", email)
+                .setParameter("pwd", pwd)
+                .getSingleResult() == 1;
     }
 
     public List<User> getAllUsers() {

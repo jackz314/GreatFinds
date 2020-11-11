@@ -43,6 +43,15 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
+    /**
+     * Create new instance of Post
+     *
+     * @param user       user who created the post
+     * @param mediaTitle media title of the post
+     * @param caption    text caption from user
+     * @param rating     G-ratings/G-score
+     * @param tags       a set of tags associated with this post
+     */
     public Post(User user, MediaTitle mediaTitle, String caption, Integer rating, Set<String> tags) {
         this.user = user;
         this.mediaTitle = mediaTitle;

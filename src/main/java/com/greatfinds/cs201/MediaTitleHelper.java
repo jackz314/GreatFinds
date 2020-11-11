@@ -6,15 +6,7 @@ import javax.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.print.attribute.standard.Media;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Stateless
 public class MediaTitleHelper {
@@ -25,7 +17,7 @@ public class MediaTitleHelper {
     @Inject
     private BeanManager beanManager;
 
-    public void registerMediaTitle(MediaTitle mediaTitle) {
+    public void addNewMediaTitle(MediaTitle mediaTitle) {
         beginSession();
         entityManager.persist(mediaTitle);
         commit();
@@ -36,6 +28,14 @@ public class MediaTitleHelper {
         System.out.println("Getting media titles");
         return entityManager
                 .createNamedQuery("getAllMediaTitles", MediaTitle.class)
+                .getResultList();
+    }
+
+    // return a list of matched media titles based on the filter string
+    // uses %FILTER% match in MySQL
+    public List<MediaTitle> getMatchedMediaTitles(String filter) {
+        return entityManager.createNamedQuery("getMatchedMediaTitles", MediaTitle.class)
+                .setParameter("filter", filter)
                 .getResultList();
     }
 

@@ -1,5 +1,7 @@
 package com.greatfinds.cs201.db.em;
 
+import com.greatfinds.cs201.db.MediaTitle;
+import com.greatfinds.cs201.db.Post;
 import com.greatfinds.cs201.db.User;
 
 import javax.persistence.EntityManager;
@@ -12,7 +14,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 @WebListener
 public class EMF implements ServletContextListener {
@@ -38,11 +43,36 @@ public class EMF implements ServletContextListener {
     }
 
     public void createTestUsers() {
-        User user = new User("Test User", "abc", "def");
-        user.setFollowedTags(Collections.singleton("all"));
+        List<User> users = Arrays.asList(
+                new User("Test User 1", "abc", "def"),
+                new User("Test User 2", "123", "456")
+        );
         EntityManager entityManager = createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(user);
+        for (User user : users) {
+            user.setFollowedTags(Collections.singleton("all"));
+            entityManager.persist(user);
+        }
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public void createTestPosts() {
+        EntityManager entityManager = createEntityManager();
+        List<User> users = entityManager.createNamedQuery("getAllUsers", User.class).getResultList();
+        List<MediaTitle> titles = Arrays.asList(
+                new MediaTitle("Test Movie 1", "Action"),
+                new MediaTitle("Test Movie 2", "Comedy")
+        );
+        titles.forEach(entityManager::persist);
+        List<Post> posts = Arrays.asList(
+                new Post(users.get(0), titles.get(0), "This is a test caption", 4,
+                        new HashSet<>(Arrays.asList("all", "testTag1"))),
+                new Post(users.get(1), titles.get(1), "This movie is so good!", 2,
+                        new HashSet<>(Arrays.asList("all", "testTag2")))
+        );
+        entityManager.getTransaction().begin();
+        posts.forEach(entityManager::persist);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
@@ -52,6 +82,7 @@ public class EMF implements ServletContextListener {
 //        createDBIfNotExists(); // uncomment if ran for the first time
         emf = Persistence.createEntityManagerFactory("greatFindsMySQL");
         createTestUsers();
+        createTestPosts();
     }
 
     @Override
