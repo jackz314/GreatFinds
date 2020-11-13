@@ -1,28 +1,37 @@
 package com.greatfinds.cs201;
 
+
+// Java packages
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.*;
 
+// our packages
+import com.greatfinds.cs201.db.Post;
+
 @Named
 @SessionScoped
 public class SearchBean implements Serializable {
+    @Inject
+    @SuppressWarnings("CdiUnproxyableBeanTypesInspection")
+    transient private PostHelper postHelper;
+    private List<Post> posts;
+
     private List<String> categories;
     private List<String> genres;
-    private String sqlSearch;
 
 
-//    @PostConstruct
-//    public void load() {
-//        categories = Arrays.asList("hello", "brother", "sgh");
-//        genres = new ArrayList<>();
-//    }
+    @PostConstruct
+    public void load() {
+        posts = postHelper.getAllPosts();
+    }
 
     public String search() {
         // Run SQL command
-        sqlSearch = "Categories: " + categories + "\nGenres: " + genres;
+        posts = postHelper.getPostsWith(categories, genres);
         return "feed";
     }
 
@@ -41,7 +50,7 @@ public class SearchBean implements Serializable {
         genres = gen;
     }
 
-    public String getSqlSearch() {
-        return sqlSearch;
+    public List<Post> getPosts() {
+        return posts;
     }
 }

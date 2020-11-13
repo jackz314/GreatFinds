@@ -21,15 +21,7 @@
 </div>
 
 <div class="container">
-    <h1>Checkbox Selection</h1>
-<!--    <ul>-->
-<!--        <li>Categories: #{searchBean.categories}</li>-->
-<!--        <li>Genres: #{searchBean.genres}</li>-->
-<!--    </ul>-->
-    <div>SQL Search: #{searchBean.sqlSearch}</div>
-
     <h1>Content Feed</h1>
-
     <div id="feed-container">
 
         <div id="sidebar-search">
@@ -50,6 +42,8 @@
                     <f:selectItem itemValue="nonfiction" itemLabel="Non-Fiction" />
                     <f:selectItem itemValue="fantasy" itemLabel="Fantasy" />
                     <f:selectItem itemValue="mystery" itemLabel="Mystery" />
+                    <f:selectItem itemValue="Action" itemLabel="Action" />
+                    <f:selectItem itemValue="Comedy" itemLabel="Comedy" />
                 </h:selectManyCheckbox>
 
                 <h:commandButton value="Search" action="#{searchBean.search}" />
@@ -57,7 +51,7 @@
         </div>
 
         <div id="content-feed">
-            <ui:repeat value="#{userBean.posts}" var="post">
+            <ui:repeat value="#{searchBean.posts}" var="post">
                 <div class="post">
                     <div class="username-date">username</div> <!-- #{post.user.displayName} -->
                     <div class="media-title-container">

@@ -123,9 +123,7 @@ public class UserBean implements Serializable {
         loginUser = new User();
     }
 
-    public boolean isUserLoggedIn() {
-        return isUserLoggedIn;
-    }
+    public boolean isUserLoggedIn() { return isUserLoggedIn; }
 
     public String getLoginStatus() {
         return isUserLoggedIn ? "logged in!\n" + loginUser : "not logged in.";

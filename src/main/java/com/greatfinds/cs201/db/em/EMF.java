@@ -61,8 +61,8 @@ public class EMF implements ServletContextListener {
         EntityManager entityManager = createEntityManager();
         List<User> users = entityManager.createNamedQuery("getAllUsers", User.class).getResultList();
         List<MediaTitle> titles = Arrays.asList(
-                new MediaTitle("Test Movie 1", "Action"),
-                new MediaTitle("Test Movie 2", "Comedy")
+                new MediaTitle("Fast and Furious", "Action"),
+                new MediaTitle("Paddington", "Comedy")
         );
         titles.forEach(entityManager::persist);
         List<Post> posts = Arrays.asList(
