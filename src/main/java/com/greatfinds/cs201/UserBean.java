@@ -59,9 +59,7 @@ public class UserBean implements Serializable {
         return registerUser;
     }
 
-    public User getLoginUser() {
-        return loginUser;
-    }
+    public User getLoginUser() { return loginUser; }
 
     @SuppressWarnings("unused")
     public void validateRegisterEmail(FacesContext context, UIComponent component, Object value) throws ValidatorException {

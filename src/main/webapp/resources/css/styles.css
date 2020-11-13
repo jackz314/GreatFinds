@@ -6,7 +6,7 @@ body {
 #navbar {
     height: 50px;
     background-color: lightblue;
-    display: flex;
+    display: flex; /* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
     justify-content: space-between;
     align-items: center;
     padding: 10px;
@@ -28,11 +28,12 @@ body {
 #sidebar-search {
     border-right: 2px solid darkgrey;
     padding: 10px;
+    width: 200px;
 }
 
 #content-feed {
     padding: 10px;
-    width: 100%;
+    width: 80%;
 }
 
 .post {
@@ -42,8 +43,8 @@ body {
     margin: 5px 0;
 }
 
-.post .username {
-    color: lightgrey;
+.post .username-date {
+    color: darkgrey;
 }
 
 .post .media-title-container {
