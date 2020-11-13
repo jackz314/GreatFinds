@@ -28,6 +28,8 @@ public class UserBean implements Serializable {
     private User loginUser;
     private boolean isUserLoggedIn = false;
 
+    private String filter;
+
     private String tagStr;
 
     //we're injecting EJB here, not regular CDI, so we don't need to implement serializable and it'll still work
@@ -37,7 +39,10 @@ public class UserBean implements Serializable {
     private Post inputPost;
     private List<Post> posts;
 
+    @SuppressWarnings("CdiUnproxyableBeanTypesInspection")
+    @Inject
     transient private MediaTitleHelper mediaTitleHelper;
+
     private MediaTitle inputMediaTitle;
 
     //same story as above
@@ -51,7 +56,6 @@ public class UserBean implements Serializable {
         posts = postHelper.getAllPosts();//start with guest posts (no filter)
         registerUser = new User();
         loginUser = new User();
-        inputPost = new Post();
         inputMediaTitle = new MediaTitle();
     }
 
@@ -113,6 +117,7 @@ public class UserBean implements Serializable {
 //        isUserLoggedIn = userHelper.userMatch(loginUser.getEmail(), loginUser.getPwd());
         isUserLoggedIn = true;
         populateUserInfo();
+        inputPost = new Post();
         Set<String> followedTags = loginUser.getFollowedTags();
         if (followedTags == null || followedTags.isEmpty()) return;//keep default if there's no followed tags
         posts = postHelper.getFollowedPosts(followedTags);
@@ -123,6 +128,7 @@ public class UserBean implements Serializable {
     public void logOut() {
         isUserLoggedIn = false;
         loginUser = new User();
+        posts = postHelper.getAllPosts();
     }
 
     public boolean isUserLoggedIn() {
@@ -173,10 +179,22 @@ public class UserBean implements Serializable {
         return inputPost;
     }
 
-    public MediaTitle getInputMediaTitle() { return inputMediaTitle; }
+    public MediaTitle getInputMediaTitle() {
+        return inputMediaTitle;
+    }
+
+    public String boldMatchedText(String title) {
+        return title.replaceAll("(?i)(^|)(" + filter + ")(|$)", "$1<b>$2</b>$3");
+    }
+
+    public List<MediaTitle> mediaTitleDropdown(String filter) {
+        this.filter = filter.toLowerCase();
+        return mediaTitleHelper.getMatchedMediaTitles(filter);
+    }
 
     public void submitPost() {
         inputPost.setUser(loginUser);
+        mediaTitleHelper.processPostMediaTitle(inputPost);
         postHelper.post(inputPost);
         inputPost = new Post();
     }

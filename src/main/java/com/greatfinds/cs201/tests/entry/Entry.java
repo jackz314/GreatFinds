@@ -1,4 +1,4 @@
-package com.greatfinds.cs201.ui_tests.entry;
+package com.greatfinds.cs201.tests.entry;
 
 import javax.persistence.*;
 

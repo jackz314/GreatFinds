@@ -1,12 +1,13 @@
-package com.greatfinds.cs201.ui_tests.entry;
+package com.greatfinds.cs201.tests.entry;
+
+import org.omnifaces.cdi.Push;
+import org.omnifaces.cdi.PushContext;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;
 import javax.faces.annotation.FacesConfig;
 import javax.faces.context.FacesContext;
-import javax.faces.push.Push;
-import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 // enforce JSF 2.3
 @FacesConfig(version = FacesConfig.Version.JSF_2_3)
 @Named
-@ApplicationScoped
+@RequestScoped
 public class EntryBean {
 
     private Entry inputEntry;

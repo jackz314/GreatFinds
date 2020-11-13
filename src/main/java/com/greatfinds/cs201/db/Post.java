@@ -61,7 +61,8 @@ public class Post {
     }
 
     public Post() {
-        rating = -1;
+        mediaTitle = new MediaTitle();
+        rating = 1;
     }
 
     @Override

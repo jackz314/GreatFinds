@@ -1,4 +1,4 @@
-package com.greatfinds.cs201.ui_tests.datatable;
+package com.greatfinds.cs201.tests.datatable;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;

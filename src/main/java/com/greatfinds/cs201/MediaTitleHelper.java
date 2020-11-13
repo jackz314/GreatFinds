@@ -1,6 +1,7 @@
 package com.greatfinds.cs201;
 
 import com.greatfinds.cs201.db.MediaTitle;
+import com.greatfinds.cs201.db.Post;
 
 import javax.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
@@ -16,6 +17,16 @@ public class MediaTitleHelper {
 
     @Inject
     private BeanManager beanManager;
+
+    public void processPostMediaTitle(Post post) {
+        MediaTitle title = post.getMediaTitle();
+        MediaTitle match = getExactMatchMediaTitle(title.getTitle(), title.getGenre());
+        if (match != null) {//found in database, update post
+            post.setMediaTitle(match);
+        } else {//not found, create new in db
+            addNewMediaTitle(title);
+        }
+    }
 
     public void addNewMediaTitle(MediaTitle mediaTitle) {
         beginSession();
@@ -34,9 +45,18 @@ public class MediaTitleHelper {
     // return a list of matched media titles based on the filter string
     // uses %FILTER% match in MySQL
     public List<MediaTitle> getMatchedMediaTitles(String filter) {
-        return entityManager.createNamedQuery("getMatchedMediaTitles", MediaTitle.class)
+        List<MediaTitle> resultList = entityManager.createNamedQuery("getMatchedMediaTitles", MediaTitle.class)
                 .setParameter("filter", filter)
                 .getResultList();
+//        System.out.println("MEDIA TITLE RESULT: " + resultList);
+        return resultList;
+    }
+
+    public MediaTitle getExactMatchMediaTitle(String title, String genre) {
+        return entityManager.createNamedQuery("getExactMatchMediaTitles", MediaTitle.class)
+                .setParameter("title", title)
+                .setParameter("genre", genre)
+                .getResultList().stream().findFirst().orElse(null);
     }
 
     private void commit() {

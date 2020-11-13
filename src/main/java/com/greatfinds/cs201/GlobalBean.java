@@ -3,13 +3,13 @@ package com.greatfinds.cs201;
 import com.greatfinds.cs201.db.MediaTitle;
 import com.greatfinds.cs201.db.Post;
 import com.greatfinds.cs201.db.User;
+import org.omnifaces.cdi.Push;
+import org.omnifaces.cdi.PushContext;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.faces.annotation.FacesConfig;
-import javax.faces.push.Push;
-import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;

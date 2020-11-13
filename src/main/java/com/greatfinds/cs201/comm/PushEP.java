@@ -15,6 +15,7 @@ public class PushEP {
 
     @OnOpen
     public void onOpen(Session session) {
+        System.out.println("New session: " + session.getId());
         SESSIONS.add(session);
     }
 

@@ -2,6 +2,39 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+/*autocomplete*/
+.ui-state-highlight {
+    background: lightgray;
+}
+
+.ui-autocomplete-panel .ui-autocomplete-table td {
+    padding: 0 !important;
+}
+
+.ui-inputfield {
+    padding: 1px 2px !important;
+}
+
+.ui-shadow {
+    box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    -o-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+}
+
+.ui-autocomplete-emptyMessage {
+    border-width: 1px;
+    border-style: solid;
+    border-color: inherit;
+    color: gray;
+}
+
+.autocomplete-dropdown {
+    background: white;
+    line-height: normal !important;
+    padding: 0 !important;
+}
+
 /* feed.xhtml */
 #navbar {
     height: 50px;
@@ -19,7 +52,6 @@ body {
 #nav-right {
     text-align: right;
 }
-
 
 #feed-container {
     display: flex;
