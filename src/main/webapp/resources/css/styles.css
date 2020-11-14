@@ -4,6 +4,10 @@ body {
     margin: 0;
 }
 
+h2, h3 {
+    text-align: center;
+}
+
 /*autocomplete*/
 .ui-state-highlight {
     background: lightgray;
@@ -37,7 +41,9 @@ body {
     padding: 0 !important;
 }
 
-/* feed.xhtml */
+
+/* header
+---------------------------------------------------------------------------------------------------------*/
 #header {
     /*height: 50px;*/
     /*background-color: lightblue;*/
@@ -90,6 +96,9 @@ body {
     color: #cff4ff;
 }
 
+
+/* feed.xhtml
+---------------------------------------------------------------------------------------------------------*/
 #feed-container {
     display: flex;
 }
@@ -153,10 +162,9 @@ body {
     margin: 0 2px;
 }
 
-/* end feed.xhtml */
 
-
-/* index.xhtml */
+/* index.xhtml
+---------------------------------------------------------------------------------------------------------*/
 #test {
     color: blue;
     border-style: dashed;
@@ -166,8 +174,27 @@ body {
     color: red;
 }
 
-/* end index.xhtml */
 
-h2, h3 {
-    text-align: center;
+/* profile.xhtml
+---------------------------------------------------------------------------------------------------------*/
+#profile-content {
+    background-color: white;
+    max-width: 600px;
+    min-width: 400px;
+    margin: auto;
+    margin-top: 30px;
+    padding: 20px;
+}
+
+.user-info {
+    font-family: "Helvetica", sans-serif;
+    margin-left: 14px;
+}
+
+.user-info-label {
+    font-family: "Tahoma", sans-serif;
+    line-height: 200%;
+    font-weight: bold;
+    font-size: 18;
+    color: #45cbf5;
 }
