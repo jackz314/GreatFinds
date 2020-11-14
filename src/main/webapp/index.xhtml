@@ -13,9 +13,21 @@
 <h:head>
     <h:outputStylesheet name="css/styles.css"/>
 </h:head>
+
+<div id="header">
+    <div id="logo">
+        <span id="logo-great">Great</span><span id="logo-finds">Finds</span>
+    </div>
+    <div id="navbar">
+        <a href="post.xhtml">POST</a>
+        <a href="feed.xhtml">FEED</a>
+        <a href="index.xhtml">LOG IN/REGISTER</a>
+        <a href="profile.xhtml">PROFILE</a>
+    </div>
+</div>
+
 <f:view>
     <!--    <h:outputLabel value="Hello, world"/>-->
-    <h1>GreatFinds</h1>
     <h3>#{entryBean.randNum}</h3>
     <h3>JSF Version: #{entryBean.JSFVersion}</h3>
     <a href="entries.xhtml">Datatable test</a>

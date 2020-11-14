@@ -1,5 +1,11 @@
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #cff4ff;
+    margin: 0;
+}
+
+h2, h3 {
+    text-align: center;
 }
 
 /*autocomplete*/
@@ -35,24 +41,64 @@ body {
     padding: 0 !important;
 }
 
-/* feed.xhtml */
-#navbar {
-    height: 50px;
-    background-color: lightblue;
+
+/* header
+---------------------------------------------------------------------------------------------------------*/
+#header {
+    /*height: 50px;*/
+    /*background-color: lightblue;*/
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    /*align-items: center;*/
+    /*!*padding: 10px;*!*/
+
+
+    position: fixed;
     display: flex;
     justify-content: space-between;
+    background: white;
     align-items: center;
-    padding: 10px;
+    flex-flow: row wrap;
+    width: 100%;
+    height: 70px;
+    box-shadow: 0 0px 24px 2px #87CEEB;
+    margin: 0px;
+    padding: 0px;
 }
 
 #logo {
+    font-family: "Impact", sans-serif;
     font-size: 20pt;
+    margin-left: 60px;
 }
 
-#nav-right {
-    text-align: right;
+#logo-great {
+    color: #45cbf5;
 }
 
+#logo-finds {
+    color: #99a1a3;
+}
+
+#navbar {
+    margin-right: 45px;
+}
+
+#navbar a {
+    font-family: "Tahoma";
+    text-decoration: none;
+    padding: 26px 15px;
+    font-size: 22px;
+    color: #99a1a3;
+}
+
+#navbar a:hover {
+    color: #cff4ff;
+}
+
+
+/* feed.xhtml
+---------------------------------------------------------------------------------------------------------*/
 #feed-container {
     display: flex;
 }
@@ -68,10 +114,22 @@ body {
 }
 
 .post {
-    border: 2px solid grey;
-    background-color: lightgoldenrodyellow;
+    border: 2px solid #c5c9c9;
+    background-color: white;
     padding: 5px;
     margin: 5px 0;
+}
+
+.post-footer {
+    border: 2px solid grey;
+}
+
+.like {
+    color: #45cbf5;
+}
+
+.comment {
+    color: #45cbf5;
 }
 
 .post .username {
@@ -104,10 +162,9 @@ body {
     margin: 0 2px;
 }
 
-/* end feed.xhtml */
 
-
-/* index.xhtml */
+/* index.xhtml
+---------------------------------------------------------------------------------------------------------*/
 #test {
     color: blue;
     border-style: dashed;
@@ -117,8 +174,27 @@ body {
     color: red;
 }
 
-/* end index.xhtml */
 
-h2, h3 {
-    text-align: center;
+/* profile.xhtml
+---------------------------------------------------------------------------------------------------------*/
+#profile-content {
+    background-color: white;
+    max-width: 600px;
+    min-width: 400px;
+    margin: auto;
+    margin-top: 30px;
+    padding: 20px;
+}
+
+.user-info {
+    font-family: "Helvetica", sans-serif;
+    margin-left: 14px;
+}
+
+.user-info-label {
+    font-family: "Tahoma", sans-serif;
+    line-height: 200%;
+    font-weight: bold;
+    font-size: 18;
+    color: #45cbf5;
 }
