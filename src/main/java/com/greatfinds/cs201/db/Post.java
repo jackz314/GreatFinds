@@ -83,6 +83,7 @@ public class Post {
 
     public void addLike(){
         ++numLikes;
+        System.out.println("added like to post");
     }
 
     public User getUser() {

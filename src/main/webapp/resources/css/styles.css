@@ -16,6 +16,7 @@ body {
 #logo {
     font-size: 20pt;
     font-weight: bold;
+    text-decoration: none;
 }
 
 #nav-right {
@@ -41,19 +42,27 @@ body {
 #sidebar-search {
     border-right: 2px solid slategray;
     padding: 10px;
-    width: 200px;
+    width: 150px;
+}
+
+#sidebar-search .search-header {
+    margin-block-end: 0.5em;
 }
 
 #content-feed {
     padding: 10px;
-    width: 80%;
+    width: 90%;
 }
 
 .post {
     border: 2px solid grey;
-    background-color: lightgoldenrodyellow;
-    padding: 5px;
+    background-color: white;
+    padding: 0px;
     margin: 5px 0;
+}
+
+.post-content {
+    padding: 10px;
 }
 
 .post-content .media-title-container {
@@ -93,10 +102,21 @@ body {
 
 .post-footer {
     display: flex;
+    border-top: 2px solid grey;
+    padding: 5px 10px;
+}
+
+.post-footer .like-counter {
+    margin-left: 20px;
+    font-weight: 600;
 }
 
 .post-footer .post-interact {
     color: dodgerblue;
+    margin-right: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
 }
 /* end feed.xhtml */
 

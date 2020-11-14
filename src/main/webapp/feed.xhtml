@@ -12,12 +12,12 @@
 </h:head>
 
 <div id="navbar">
-    <div id="logo"><span style="color: dodgerblue;">Great</span><span style="color: slategray;">Finds</span></div>
+    <h:outputLink value="index.xhtml" id="logo"><span style="color: dodgerblue;">Great</span><span style="color: slategray;">Finds</span></h:outputLink>
     <ul id="nav-right">
-        <li>SIGN IN</li>
-        <li>FEED</li>
-        <li>POST</li>
-        <li>PROFILE</li>
+        <li><h:link value="SIGN IN" outcome="feed"/></li>
+        <li><h:link value="FEED" outcome="feed"/></li>
+        <li><h:link value="POST" outcome="feed"/></li>
+        <li><h:link value="PROFILE" outcome="feed"/></li>
     </ul>
 </div>
 
@@ -29,7 +29,7 @@
             <h3>Search</h3>
 
             <h:form>
-                <h4>Media Category</h4>
+                <h4 class="search-header">Media Category</h4>
                 <h:selectManyCheckbox layout="pageDirection" value="#{searchBean.categories}">
                     <f:selectItem itemValue="movies" itemLabel="Movies" />
                     <f:selectItem itemValue="tv" itemLabel="TV Shows" />
@@ -37,7 +37,7 @@
                     <f:selectItem itemValue="podcasts" itemLabel="Podcasts" />
                 </h:selectManyCheckbox>
 
-                <h4>Genre</h4>
+                <h4 class="search-header">Genre</h4>
                 <h:selectManyCheckbox layout="pageDirection" value="#{searchBean.genres}">
                     <f:selectItem itemValue="scifi" itemLabel="Sci-Fi" />
                     <f:selectItem itemValue="nonfiction" itemLabel="Non-Fiction" />
@@ -72,8 +72,11 @@
                     </div>
 
                     <div class="post-footer">
-                        <div class="post-interact">Like</div>
-                        <div class="post-interact">Comment</div>
+                        <h:form>
+                            <h:commandLink action="#{post.addLike}" value="Like" class="post-interact"/>
+                            <h:commandLink action="#{post.addComment}" value="Comment" class="post-interact"/>
+                        </h:form>
+                        <div class="like-counter">#{post.numLikes} Likes</div>
                     </div>
                 </div>
             </ui:repeat>
