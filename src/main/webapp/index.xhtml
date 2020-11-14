@@ -98,6 +98,7 @@
                                    itemLabel="#{title.title}" itemValue="#{title}"
                                    completeMethod="#{userBean.mediaTitleDropdown}"
                                    required="true" requiredMessage="Please enter a mediaTitle">
+            <p:ajax event="itemSelect" listener="#{userBean.dropdownItemSelected}" update="genreInput"/>
             <p:column>
                 <h:outputText value="#{userBean.boldMatchedText(title.title)}" escape="false"/> / #{title.genre}
             </p:column>
@@ -174,6 +175,7 @@
 
 <!--listen to websocket for changes and update entries when changed-->
 <h:form>
+    <!--suppress ReservedWordAsName ide bug with JS anonymous function-->
     <o:socket channel="pushCh" scope="view" onmessage="function(m){console.log(m);}">
         <f:ajax event="updateEntries" render="entries"/>
     </o:socket>

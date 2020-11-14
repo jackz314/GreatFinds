@@ -1,6 +1,9 @@
 package com.greatfinds.cs201.db;
 
 import javax.persistence.*;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Entity
@@ -73,5 +76,25 @@ public class MediaTitle {
     @Override
     public String toString() {
         return title + " / " + genre;
+    }
+
+    //get an url escaped String that represents the media title, includes title and genre
+    public String escapedSimpleRep() {
+        if (title == null || genre == null) return null;
+        return URLEncoder.encode(title, StandardCharsets.UTF_8) + "," + URLEncoder.encode(genre, StandardCharsets.UTF_8);
+    }
+
+    //populate object info (title & genre) with an escaped representation
+    public void populateEscapedRep(String rep) {
+        if (rep == null) return;
+        int splitIdx = rep.indexOf(',');
+        if (splitIdx == -1) {
+            // object didn't exist before in the database
+            // this is a new one and only contains a title, no need to decode anything
+            title = rep;
+            return;
+        }
+        title = URLDecoder.decode(rep.substring(0, splitIdx), StandardCharsets.UTF_8);
+        genre = URLDecoder.decode(rep.substring(splitIdx + 1), StandardCharsets.UTF_8);
     }
 }

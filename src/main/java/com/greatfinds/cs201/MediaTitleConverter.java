@@ -13,18 +13,18 @@ public class MediaTitleConverter implements Converter<MediaTitle> {
     @Override
     public MediaTitle getAsObject(FacesContext fc, UIComponent uic, String value) {
         if (value != null && value.trim().length() > 0) {
-            var title = new MediaTitle();
-            title.setTitle(value);
-            return title;
+            var mediaTitle = new MediaTitle();
+            mediaTitle.populateEscapedRep(value);
+            return mediaTitle;
         } else {
             return null;
         }
     }
 
     @Override
-    public String getAsString(FacesContext fc, UIComponent uic, MediaTitle object) {
-        if (object != null) {
-            return object.toString();
+    public String getAsString(FacesContext fc, UIComponent uic, MediaTitle mediaTitle) {
+        if (mediaTitle != null) {
+            return mediaTitle.escapedSimpleRep();
         } else {
             return null;
         }

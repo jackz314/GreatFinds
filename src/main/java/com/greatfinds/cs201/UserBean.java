@@ -3,6 +3,7 @@ package com.greatfinds.cs201;
 import com.greatfinds.cs201.db.MediaTitle;
 import com.greatfinds.cs201.db.Post;
 import com.greatfinds.cs201.db.User;
+import org.primefaces.event.SelectEvent;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -43,8 +44,6 @@ public class UserBean implements Serializable {
     @Inject
     transient private MediaTitleHelper mediaTitleHelper;
 
-    private MediaTitle inputMediaTitle;
-
     //same story as above
     @SuppressWarnings("CdiUnproxyableBeanTypesInspection")
     @Inject
@@ -56,7 +55,6 @@ public class UserBean implements Serializable {
         posts = postHelper.getAllPosts();//start with guest posts (no filter)
         registerUser = new User();
         loginUser = new User();
-        inputMediaTitle = new MediaTitle();
     }
 
     public User getRegisterUser() {
@@ -179,12 +177,13 @@ public class UserBean implements Serializable {
         return inputPost;
     }
 
-    public MediaTitle getInputMediaTitle() {
-        return inputMediaTitle;
-    }
-
     public String boldMatchedText(String title) {
         return title.replaceAll("(?i)(^|)(" + filter + ")(|$)", "$1<b>$2</b>$3");
+    }
+
+    public void dropdownItemSelected(SelectEvent event) {
+        MediaTitle selectedTitle = (MediaTitle) event.getObject();
+        inputPost.setMediaTitle(selectedTitle);
     }
 
     public List<MediaTitle> mediaTitleDropdown(String filter) {
@@ -198,10 +197,4 @@ public class UserBean implements Serializable {
         postHelper.post(inputPost);
         inputPost = new Post();
     }
-
-    public void addMediaTitle() {
-        mediaTitleHelper.addNewMediaTitle(inputMediaTitle);
-        inputMediaTitle = new MediaTitle();
-    }
-
 }
