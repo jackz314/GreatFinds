@@ -40,9 +40,7 @@ public class User {
         this.followedTags = followedTags;
     }
 
-    public String getDisplayName() {
-        return displayName == null ? "" : displayName;
-    }
+    public String getDisplayName() { return displayName == null ? "" : displayName; }
 
     public void setDisplayName(String name) {
         this.displayName = name;

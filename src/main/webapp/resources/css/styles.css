@@ -1,11 +1,12 @@
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: lightblue;
 }
 
 /* feed.xhtml */
 #navbar {
     height: 50px;
-    background-color: lightblue;
+    background-color: white;
     display: flex; /* https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
     justify-content: space-between;
     align-items: center;
@@ -14,10 +15,22 @@ body {
 
 #logo {
     font-size: 20pt;
+    font-weight: bold;
 }
 
 #nav-right {
-    text-align: right;
+    display: flex;
+    list-style: none;
+}
+
+#nav-right li {
+    padding: 0 8px;
+    border-right: 2px solid black;
+}
+
+#nav-right li:last-child {
+    margin: 0;
+    border-width: 0;
 }
 
 
@@ -26,7 +39,7 @@ body {
 }
 
 #sidebar-search {
-    border-right: 2px solid darkgrey;
+    border-right: 2px solid slategray;
     padding: 10px;
     width: 200px;
 }
@@ -43,36 +56,48 @@ body {
     margin: 5px 0;
 }
 
-.post .username-date {
-    color: darkgrey;
-}
-
-.post .media-title-container {
+.post-content .media-title-container {
     display: flex;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
     align-items: center;
 }
 
-.post .media-title-container .media-title {
+.post-content .media-title-container .media-title {
     font-size: 2em;
 }
 
-.post .media-title-container .rating {
+.post-content .media-title-container .rating {
+    margin-left: 10px;
 }
 
-.post .caption {
+.post-content .username {
+    margin-right: 2px;
+}
+
+.post-content .caption {
+    color: dimgrey;
     font-style: italic;
 }
 
-.post .tag-list {
+.post-content .tag-list {
+    margin-top: 5px;
     display: flex;
 }
 
-.post .tag {
+.post-content .tag {
     background-color: lightblue;
-    margin: 0 2px;
+    margin-right: 10px;
+    padding: 3px;
+    border-radius: 2px;
 }
 
+.post-footer {
+    display: flex;
+}
+
+.post-footer .post-interact {
+    color: dodgerblue;
+}
 /* end feed.xhtml */
 
 

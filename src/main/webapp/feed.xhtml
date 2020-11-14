@@ -12,12 +12,13 @@
 </h:head>
 
 <div id="navbar">
-    <div id="logo">
-        GreatFinds
-    </div>
-    <div id="nav-right">
-        Profile
-    </div>
+    <div id="logo"><span style="color: dodgerblue;">Great</span><span style="color: slategray;">Finds</span></div>
+    <ul id="nav-right">
+        <li>SIGN IN</li>
+        <li>FEED</li>
+        <li>POST</li>
+        <li>PROFILE</li>
+    </ul>
 </div>
 
 <div class="container">
@@ -42,8 +43,8 @@
                     <f:selectItem itemValue="nonfiction" itemLabel="Non-Fiction" />
                     <f:selectItem itemValue="fantasy" itemLabel="Fantasy" />
                     <f:selectItem itemValue="mystery" itemLabel="Mystery" />
-                    <f:selectItem itemValue="Action" itemLabel="Action" />
-                    <f:selectItem itemValue="Comedy" itemLabel="Comedy" />
+                    <f:selectItem itemValue="action" itemLabel="Action" />
+                    <f:selectItem itemValue="comedy" itemLabel="Comedy" />
                 </h:selectManyCheckbox>
 
                 <h:commandButton value="Search" action="#{searchBean.search}" />
@@ -53,15 +54,26 @@
         <div id="content-feed">
             <ui:repeat value="#{searchBean.posts}" var="post">
                 <div class="post">
-                    <div class="username-date">username</div> <!-- #{post.user.displayName} -->
-                    <div class="media-title-container">
-                        <div class="media-title">#{post.mediaTitle.title}</div>
-                        <div class="rating">G-Rating: #{post.rating}</div>
+                    <div class="post-content">
+                        <div class="media-title-container">
+                            <div class="media-title">#{post.mediaTitle.title}</div>
+                            <div class="rating">G-Rating: #{post.rating}</div>
+                        </div>
+                        <div>
+                            <span class="username">#{post.user.displayName}:</span>
+                            <span class="caption">#{post.caption}</span>
+                        </div>
+
+                        <div class="tag-list">
+                            <ui:repeat value="#{post.tags}" var="tag">
+                                <div class="tag">##{tag}</div>
+                            </ui:repeat>
+                        </div>
                     </div>
-                    <div class="caption">#{post.caption}</div>
-                    <div class="tag-list">
-                        <div class="tag">tag 1</div>
-                        <div class="tag">tag 2</div>
+
+                    <div class="post-footer">
+                        <div class="post-interact">Like</div>
+                        <div class="post-interact">Comment</div>
                     </div>
                 </div>
             </ui:repeat>
