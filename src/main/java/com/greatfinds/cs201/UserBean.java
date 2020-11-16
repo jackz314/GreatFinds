@@ -3,11 +3,13 @@ package com.greatfinds.cs201;
 import com.greatfinds.cs201.db.MediaTitle;
 import com.greatfinds.cs201.db.Post;
 import com.greatfinds.cs201.db.User;
+import org.apache.deltaspike.core.api.scope.WindowScoped;
+import org.omnifaces.cdi.Push;
+import org.omnifaces.cdi.PushContext;
 import org.primefaces.event.SelectEvent;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
-import javax.enterprise.event.Observes;
+import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -22,7 +24,7 @@ import java.util.Set;
 //user session scoped, one instance per user, including anonymous/guest users
 
 @Named
-@SessionScoped
+@WindowScoped
 public class UserBean implements Serializable {
 
     private User registerUser;
@@ -32,6 +34,9 @@ public class UserBean implements Serializable {
     private String filter;
 
     private String tagStr;
+
+    @Inject
+    private GlobalBean globalBean;
 
     //we're injecting EJB here, not regular CDI, so we don't need to implement serializable and it'll still work
     @SuppressWarnings("CdiUnproxyableBeanTypesInspection")
@@ -49,12 +54,22 @@ public class UserBean implements Serializable {
     @Inject
     transient private UserHelper userHelper;
 
+    @Inject
+    @Push
+    private PushContext pushCh;
+
     @PostConstruct
     public void load() {
         System.out.println("LOADED user bean");
         posts = postHelper.getAllPosts();//start with guest posts (no filter)
         registerUser = new User();
         loginUser = new User();
+        globalBean.registerUserBean(this);
+    }
+
+    @PreDestroy
+    public void unload() {
+        globalBean.unregisterUserBean(this);
     }
 
     public User getRegisterUser() {
@@ -80,7 +95,7 @@ public class UserBean implements Serializable {
     public void validateLoginEmail(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         System.out.println("VALIDATING EMAIL");
         String email = (String) value;
-        if ("abc".equals(email)) return;//skip test account
+        if ("abc".equals(email) || "123".equals(email)) return;//skip test account
         if (!email.matches("^.+@.+\\..+$")) {
             throw new ValidatorException(new FacesMessage("Invalid email."));
         }/*else if (!service.userExists(email)) {
@@ -123,6 +138,11 @@ public class UserBean implements Serializable {
         System.out.println("User logged in: " + loginUser);
     }
 
+    public String loginRedirect() {
+        login();
+        return "index.xhtml?faces-redirect=true";
+    }
+
     public void logOut() {
         isUserLoggedIn = false;
         loginUser = new User();
@@ -137,7 +157,7 @@ public class UserBean implements Serializable {
         return isUserLoggedIn ? "logged in!\n" + loginUser : "not logged in.";
     }
 
-    public void onPostsUpdate(@Observes PostUpdate postUpdate) {
+    public void onPostsUpdate(PostUpdate postUpdate) {
         System.out.println("User POST UPDATE: " + postUpdate);
         Post post = postUpdate.getPost();
         Set<String> followedTags = loginUser.getFollowedTags();
@@ -149,6 +169,7 @@ public class UserBean implements Serializable {
                 case DELETED -> posts.remove(post);
                 case MODIFIED -> posts.set(posts.indexOf(post), post);
             }
+            pushCh.send("updatePosts");
         } catch (Exception e) {
             e.printStackTrace();
         }

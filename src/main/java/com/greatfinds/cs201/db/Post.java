@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "posts")
 @NamedQueries({
-        @NamedQuery(name = "getAllPosts", query = "SELECT p from Post p"),
+        @NamedQuery(name = "getAllPosts", query = "SELECT p from Post p ORDER BY p.timestamp DESC"),
 //    @NamedQuery(name = "getFollowedPosts", query = "SELECT p from Post p WHERE :tag MEMBER OF p.tags"),
 })
 public class Post {

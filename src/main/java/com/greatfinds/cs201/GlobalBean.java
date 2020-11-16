@@ -9,16 +9,14 @@ import org.omnifaces.cdi.PushContext;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
-import javax.faces.annotation.FacesConfig;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 // Global bean that's shared across all users and sessions. Only one instance on the server
 // This is NOT thread-safe, use synchronization if needed
 
-// enforce JSF 2.3
-@FacesConfig(version = FacesConfig.Version.JSF_2_3)
 @Named
 @ApplicationScoped
 public class GlobalBean {
@@ -32,7 +30,9 @@ public class GlobalBean {
     @Inject
     private MediaTitleHelper titleHelper;
 
-    private List<Post> posts;
+    private final CopyOnWriteArraySet<UserBean> userBeans = new CopyOnWriteArraySet<>();
+
+    private List<Post> globalPosts;
 
     private List<User> users;
 
@@ -45,7 +45,7 @@ public class GlobalBean {
     //like constructor, called after bean is constructed
     @PostConstruct
     public void load() {
-        posts = postHelper.getAllPosts();
+        globalPosts = postHelper.getAllPosts();
         users = userHelper.getAllUsers();
         titles = titleHelper.getAllMediaTitles();
     }
@@ -56,13 +56,16 @@ public class GlobalBean {
         Post post = postUpdate.getPost();
         try {
             switch (postUpdate.getType()) {
-                case CREATED -> posts.add(0, post);
-                case DELETED -> posts.remove(post);
-                case MODIFIED -> posts.set(posts.indexOf(post), post);
+                case CREATED -> globalPosts.add(0, post);
+                case DELETED -> globalPosts.remove(post);
+                case MODIFIED -> globalPosts.set(globalPosts.indexOf(post), post);
             }
+            userBeans.forEach(userBean -> userBean.onPostsUpdate(postUpdate));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+//        pushCh.send("updatePosts");
     }
 
     //called when a new user is created, thread safe
@@ -84,10 +87,18 @@ public class GlobalBean {
     }
 
     public List<Post> getAllPosts() {
-        return posts;
+        return globalPosts;
     }
 
     public List<MediaTitle> getAllMediaTitles() {
         return titles;
+    }
+
+    public void registerUserBean(UserBean userBean) {
+        userBeans.add(userBean);
+    }
+
+    public void unregisterUserBean(UserBean userBean) {
+        userBeans.remove(userBean);
     }
 }

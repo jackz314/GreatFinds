@@ -8,46 +8,52 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:o="http://omnifaces.org/ui"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:ds="http://deltaspike.apache.org/jsf"
 >
 
 <h:head>
     <h:outputStylesheet name="css/styles.css"/>
 </h:head>
-
 <div id="header">
     <div id="logo">
-        <span id="logo-great">Great</span><span id="logo-finds">Finds</span>
+        <a href="index.xhtml" style="text-decoration:none">
+            <span id="logo-great">Great</span>
+            <span id="logo-finds">Finds</span></a>
     </div>
     <div id="navbar">
-        <a href="post.xhtml">POST</a>
+        <!--        <a href="post.xhtml">POST</a>-->
+        <h:outputLabel rendered="#{userBean.userLoggedIn}">
+            <a href="#" onclick="PF('postDialog').show();">POST</a>
+        </h:outputLabel>
         <a href="feed.xhtml">FEED</a>
-        <a href="index.xhtml">LOG IN/REGISTER</a>
+        <a href="login.xhtml">LOG IN/REGISTER</a>
         <a href="profile.xhtml">PROFILE</a>
     </div>
 </div>
 
-<f:view>
-    <!--    <h:outputLabel value="Hello, world"/>-->
-    <h3>#{entryBean.randNum}</h3>
-    <h3>JSF Version: #{entryBean.JSFVersion}</h3>
-    <a href="entries.xhtml">Datatable test</a>
-    <a href="jsp_test.jsp">JSP test</a>
-    <p id="test">
-        Hello, this is the test of the css stuff. This text should be blue!
-    </p>
-    <br/>
+<div style="flex: 1; overflow: auto">
+    <f:view>
+        <!--    <h:outputLabel value="Hello, world"/>-->
+        <h3>#{entryBean.randNum}</h3>
+        <h3>JSF Version: #{entryBean.JSFVersion}</h3>
+        <a href="entries.xhtml">Datatable test</a>
+        <a href="jsp_test.jsp">JSP test</a>
+        <p id="test">
+            Hello, this is the test of the css stuff. This text should be blue!
+        </p>
+        <br/>
 </f:view>
 
-<h:form>
-    <h:inputText value="#{entryBean.inputEntry.msg}"/>
-    <h:commandButton value="Submit Entry" ajax="true" action="#{entryBean.submit}">
-        <f:ajax execute="@form" render="@form entries"/>
-    </h:commandButton>
+    <h:form>
+        <h:inputText value="#{entryBean.inputEntry.msg}"/>
+        <h:commandButton value="Submit Entry" ajax="true" action="#{entryBean.submit}">
+            <f:ajax execute="@form" render="@form entries"/>
+        </h:commandButton>
 </h:form>
 
-<p id="loginStatus">Login status: #{userBean.loginStatus}</p>
+    <p id="loginStatus">Login status: #{userBean.loginStatus}</p>
 
-<!-- User Authentication Form(s) -->
+    <!-- User Authentication Form(s) -->
 <h:panelGroup rendered="#{not userBean.userLoggedIn}">
     <h4>Registration</h4>
     <h:form binding="#{registerForm}">
@@ -85,58 +91,63 @@
     <br/>
 </h:panelGroup>
 
-<!--shown if user is logged in-->
-<h:panelGroup rendered="#{userBean.userLoggedIn}">
-    <h:form>
-        Tags:
-        <h:inputText id="tagInput" value="#{userBean.tagStr}">
-            <f:ajax event="keyup" render="userFeed loginStatus"/>
-        </h:inputText>
-        <br/>
-        <h:commandButton value="Log out" ajax="true" action="#{userBean.logOut}">
-            <f:ajax execute="@form" render="@all"/>
-        </h:commandButton>
-    </h:form>
+    <!--shown if user is logged in-->
+    <h:panelGroup rendered="#{userBean.userLoggedIn}">
+        <p:dialog header="Create post" widgetVar="postDialog" modal="true" draggable="false" resizable="false"
+                  responsive="true" showHeader="true" closeOnEscape="true">
+            <h:form binding="#{postForm}">
+                <p> Title: <p:autoComplete id="titleInput" value="#{userBean.inputPost.mediaTitle}"
+                                           panelStyleClass="autocomplete-dropdown"
+                                           minQueryLength="1" maxResults="10" maxlength="100"
+                                           emptyMessage="No titles found in the database" cache="true" cacheTimeout="30"
+                                           autoSelection="true" autoHighlight="true"
+                                           var="title" converter="mediaTitleConverter"
+                                           itemLabel="#{title.title}" itemValue="#{title}"
+                                           completeMethod="#{userBean.mediaTitleDropdown}"
+                                           required="true" requiredMessage="Please enter a mediaTitle">
+                    <p:ajax event="itemSelect" listener="#{userBean.dropdownItemSelected}" update="genreInput"/>
+                    <p:column>
+                        <h:outputText value="#{userBean.boldMatchedText(title.title)}" escape="false"/> / #{title.genre}
+                    </p:column>
+                </p:autoComplete>
+                    Genre: <h:inputText id="genreInput" value="#{userBean.inputPost.mediaTitle.genre}" required="true"
+                                        requiredMessage="Please enter a genre"/>
+                </p>
+                <p>
+                    Caption: <h:inputText id="postInput" value="#{userBean.inputPost.caption}" required="true"
+                                          requiredMessage="Please enter a caption"/>
+                    Rating: <h:inputText id="ratingInput" value="#{userBean.inputPost.rating}" required="true"
+                                         requiredMessage="Please enter a rating" validatorMessage="Invalid rating">
+                    <f:validateLongRange minimum="1" maximum="5"/>
+                </h:inputText>
+                </p>
+                <p:commandButton value="Submit Post" ajax="true" action="#{userBean.submitPost}"
+                                 update="@form userFeed globalFeed titles"
+                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('postDialog').hide();">
+                    <!--                <f:ajax execute="@form" render="@form userFeed globalFeed titles"/>-->
+                </p:commandButton>
+                <h:messages rendered="#{postForm.submitted}" infoClass="errorMsg" errorClass="errorMsg"
+                            redisplay="false"
+                            id="post_msgs"/>
+            </h:form>
+        </p:dialog>
+        <h:form>
+            Tags:
+            <h:inputText id="tagInput" value="#{userBean.tagStr}">
+                <f:ajax event="keyup" render="userFeed loginStatus"/>
+            </h:inputText>
+            <br/>
+            <h:commandButton value="Log out" ajax="true" action="#{userBean.logOut}">
+                <f:ajax execute="@form" render="@all"/>
+            </h:commandButton>
+        </h:form>
 
-    <h4>Create Post</h4>
-    <h:form binding="#{postForm}">
-        <h5>Add new media title:</h5>
-        <p> Title: <p:autoComplete id="titleInput" value="#{userBean.inputPost.mediaTitle}"
-                                   inputStyleClass="autocomplete-input" panelStyleClass="autocomplete-dropdown"
-                                   minQueryLength="1" maxResults="10" maxlength="100"
-                                   emptyMessage="No titles found in the database" cache="true" cacheTimeout="30"
-                                   autoSelection="true" autoHighlight="true"
-                                   var="title" converter="mediaTitleConverter"
-                                   itemLabel="#{title.title}" itemValue="#{title}"
-                                   completeMethod="#{userBean.mediaTitleDropdown}"
-                                   required="true" requiredMessage="Please enter a mediaTitle">
-            <p:ajax event="itemSelect" listener="#{userBean.dropdownItemSelected}" update="genreInput"/>
-            <p:column>
-                <h:outputText value="#{userBean.boldMatchedText(title.title)}" escape="false"/> / #{title.genre}
-            </p:column>
-        </p:autoComplete>
-            Genre: <h:inputText id="genreInput" value="#{userBean.inputPost.mediaTitle.genre}" required="true"
-                                requiredMessage="Please enter a genre"/>
-        </p>
-        <p>
-            Caption: <h:inputText id="postInput" value="#{userBean.inputPost.caption}" required="true"
-                                  requiredMessage="Please enter a caption"/>
-            Rating: <h:inputText id="ratingInput" value="#{userBean.inputPost.rating}" required="true"
-                                 requiredMessage="Please enter a rating" validatorMessage="Invalid rating">
-            <f:validateLongRange minimum="1" maximum="5"/>
-        </h:inputText>
-        </p>
-        <h:commandButton value="Submit Post" ajax="true" action="#{userBean.submitPost}">
-            <f:ajax execute="@form" render="@form userFeed globalFeed titles"/>
-        </h:commandButton>
-        <h:messages rendered="#{postForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" redisplay="false"
-                    id="post_msgs"/>
-    </h:form>
-</h:panelGroup>
 
-<br/>
+    </h:panelGroup>
 
-<h2>Feed</h2>
+    <br/>
+
+    <h2>Feed</h2>
 <h:dataTable id="userFeed" value="#{userBean.posts}" var="post">
     <h:column><f:facet name="header">Title</f:facet>
         #{post.mediaTitle}</h:column>
@@ -150,28 +161,28 @@
         #{post.numLikes}</h:column>
 </h:dataTable>
 
-<br/>
+    <br/>
 <h3>--Debugging Info Below--</h3>
 
-<!--<h2>Entries</h2>-->
+    <!--<h2>Entries</h2>-->
 <!--<h:dataTable id="entries" value="#{entryBean.entries}" var="entry">-->
 <!--    <h:column>#{entry.msg}</h:column>-->
 <!--</h:dataTable>-->
 
-<h2>User Table</h2>
+    <h2>User Table</h2>
 <h:dataTable id="users" value="#{globalBean.allUsers}" var="user">
     <h:column><f:facet name="header">Name</f:facet>#{user.displayName}</h:column>
     <h:column><f:facet name="header">Email</f:facet>#{user.email}</h:column>
     <h:column><f:facet name="header">Password</f:facet>#{user.pwd}</h:column>
 </h:dataTable>
 
-<h2>Media Title Table</h2>
+    <h2>Media Title Table</h2>
 <h:dataTable id="titles" value="#{globalBean.allMediaTitles}" var="title">
     <h:column><f:facet name="header">Title</f:facet>#{title.title}</h:column>
     <h:column><f:facet name="header">Genre</f:facet>#{title.genre}</h:column>
 </h:dataTable>
 
-<h2>Global Feed</h2>
+    <h2>Global Feed</h2>
 <h:dataTable id="globalFeed" value="#{globalBean.allPosts}" var="post">
     <h:column><f:facet name="header">Title</f:facet>
         #{post.mediaTitle}</h:column>
@@ -185,11 +196,13 @@
         #{post.numLikes}</h:column>
 </h:dataTable>
 
-<!--listen to websocket for changes and update entries when changed-->
-<h:form>
-    <!--suppress ReservedWordAsName ide bug with JS anonymous function-->
-    <o:socket channel="pushCh" scope="view" onmessage="function(m){console.log(m);}">
-        <f:ajax event="updateEntries" render="entries"/>
-    </o:socket>
-</h:form>
+    <!--listen to websocket for changes and update entries when changed-->
+    <h:form>
+        <!--suppress ReservedWordAsName ide bug with JS anonymous function-->
+        <o:socket channel="pushCh" scope="view" onmessage="function(m){console.log(m);}">
+            <p:ajax event="updatePosts" update="globalFeed userFeed"/>
+        </o:socket>
+    </h:form>
+    <ds:windowId/>
+</div>
 </html>

@@ -30,8 +30,6 @@ public class EntryBean {
 
     @PostConstruct
     public void load() {
-//        String version = getJSFVersion();
-//        System.out.println("JSF Version: " + version);
         inputEntry = new Entry();
         entries = service.list();
     }
@@ -60,14 +58,9 @@ public class EntryBean {
         System.out.println("NEW ENTRY: " + newEntry);
         entries.add(0, newEntry);
         pushCh.send("updateEntries");
-//        comm.PushEP.sendAll("updateEntries");
     }
 
     public List<Entry> getEntries() {
-//        entries = new LinkedList<>();
-//        entries.add(new ui_tests.entry_test.Entry("Hello"));
-//        entries.add(new ui_tests.entry_test.Entry("Test"));
-//        System.out.println("ENTRIES: " + entries);
         return entries;
     }
 

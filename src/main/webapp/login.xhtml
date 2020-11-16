@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://omnifaces.org/ui">
+<h:head>
+    <h:outputStylesheet name="css/styles.css"/>
+    <!--    comment out below if testing and don't want to redirect if logged in-->
+    <h:panelGroup rendered="#{userBean.userLoggedIn}">
+        <meta http-equiv="refresh" content="0; URL=profile.xhtml"/>
+    </h:panelGroup>
+</h:head>
+
+<div id="header">
+    <div id="logo">
+        <span id="logo-great">Great</span><span id="logo-finds">Finds</span>
+    </div>
+    <div id="navbar">
+        <a href="post.xhtml">POST</a>
+        <a href="feed.xhtml">FEED</a>
+        <a href="login.xhtml">LOG IN/REGISTER</a>
+        <a href="profile.xhtml">PROFILE</a>
+    </div>
+</div>
+
+<!-- User Authentication Form(s) -->
+<h:panelGroup rendered="#{not userBean.userLoggedIn}">
+    <h4>Registration</h4>
+    <h:form binding="#{registerForm}">
+        <p> Username: <h:inputText id="usernameInput" value="#{userBean.registerUser.displayName}" required="true"
+                                   requiredMessage="Please enter a username."/>
+            Email: <h:inputText id="emailInput" value="#{userBean.registerUser.email}" required="true"
+                                requiredMessage="Please enter a valid email."
+                                validator="#{userBean.validateRegisterEmail}"/>
+            Password: <h:inputSecret id="pwdInput" value="#{userBean.registerUser.pwd}" required="true"
+                                     requiredMessage="Please enter a password."/>
+        </p>
+        <h:messages rendered="#{registerForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" id="reg_msgs"/>
+        <h:commandButton value="Register" ajax="true" action="#{userBean.register}">
+            <f:ajax execute="@form" render="@form users"/>
+        </h:commandButton>
+    </h:form>
+
+    <h4>Login</h4>
+    <h:form binding="#{loginForm}">
+        <p> Email: <h:inputText id="emailLogin" value="#{userBean.loginUser.email}" required="true"
+                                requiredMessage="Please enter a valid email. "
+                                validator="#{userBean.validateLoginEmail}"/>
+            Password: <h:inputSecret id="pwdLogin" value="#{userBean.loginUser.pwd}"
+                                     required="true" requiredMessage="Please enter a password. "/>
+        </p>
+        <o:validateMultiple components="emailLogin pwdLogin" validator="#{userBean.validateLogin}"
+                            message="Incorrect email or password."/>
+        <h:messages rendered="#{loginForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" redisplay="false"
+                    id="login_msgs"/>
+        <h:commandButton value="Login" ajax="true" action="#{userBean.loginRedirect}">
+            <f:ajax execute="@form" render="@all"/>
+        </h:commandButton>
+    </h:form>
+
+    <br/>
+</h:panelGroup>
+</html>

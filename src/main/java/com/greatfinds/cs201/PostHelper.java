@@ -1,14 +1,12 @@
 package com.greatfinds.cs201;
 
 import com.greatfinds.cs201.db.Post;
-import com.greatfinds.cs201.db.User;
 
 import javax.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -54,7 +52,7 @@ public class PostHelper {
     public List<Post> getFollowedPosts(Set<String> tags) {
 //        TypedQuery<Post> query = entityManager.createNamedQuery("getFollowedPosts", Post.class);
         if (tags == null || tags.isEmpty()) return getAllPosts();
-        StringJoiner joiner = new StringJoiner(" OR ", "SELECT p from Post p WHERE ", "");
+        StringJoiner joiner = new StringJoiner(" OR ", "SELECT p from Post p WHERE ", " ORDER BY p.timestamp DESC");
         int i = 0;
         for (; i < tags.size(); i++) {
             String s = ":var" + i + " MEMBER OF p.tags";
