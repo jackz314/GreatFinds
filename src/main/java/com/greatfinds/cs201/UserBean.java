@@ -76,9 +76,7 @@ public class UserBean implements Serializable {
         return registerUser;
     }
 
-    public User getLoginUser() {
-        return loginUser;
-    }
+    public User getLoginUser() { return loginUser; }
 
     @SuppressWarnings("unused")
     public void validateRegisterEmail(FacesContext context, UIComponent component, Object value) throws ValidatorException {
@@ -149,9 +147,7 @@ public class UserBean implements Serializable {
         posts = postHelper.getAllPosts();
     }
 
-    public boolean isUserLoggedIn() {
-        return isUserLoggedIn;
-    }
+    public boolean isUserLoggedIn() { return isUserLoggedIn; }
 
     public String getLoginStatus() {
         return isUserLoggedIn ? "logged in!\n" + loginUser : "not logged in.";

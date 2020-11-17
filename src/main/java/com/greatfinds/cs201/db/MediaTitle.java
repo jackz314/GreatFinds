@@ -20,6 +20,7 @@ public class MediaTitle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mediaTitleID;
 
+    @JoinColumn(name = "genre")
     private String genre;
     private String title;
 

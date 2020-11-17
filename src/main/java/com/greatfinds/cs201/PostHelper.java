@@ -66,6 +66,28 @@ public class PostHelper {
         return query.getResultList();
     }
 
+    // get all posts with the given parameters
+    public List<Post> getPostsWith(List<String> categories, List<String> genres) {
+        StringJoiner joiner = new StringJoiner(" OR ", "SELECT p from Post p WHERE ", "");
+
+        // add category constraints (not implemented as this attribute does not exist yet)
+
+        // add genre constraints
+        int g_index = 0;
+        for (; g_index < genres.size(); g_index++) {
+            joiner.add(":var" + g_index + "= p.mediaTitle.genre");
+        }
+
+        // Finish constructing query
+        String queryStr = joiner.toString();
+        System.out.println(queryStr);
+        TypedQuery<Post> query = entityManager.createQuery(queryStr, Post.class);
+
+        g_index = 0;
+        for (String g : genres) query.setParameter("var" + g_index++, g);
+        return query.getResultList();
+    }
+
     public List<Post> getAllPosts() {
         return entityManager.createNamedQuery("getAllPosts", Post.class).getResultList();
     }

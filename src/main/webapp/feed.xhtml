@@ -3,93 +3,87 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
 
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://primefaces.org/ui ">
-
-<h:head id="navbar">
+<h:head>
     <h:outputStylesheet name="css/styles.css"/>
 </h:head>
 
 <h:body>
 
 
-<div id="header">
-    <div id="logo">
-        <span id="logo-great">Great</span><span id="logo-finds">Finds</span>
-    </div>
-    <div id="navbar">
-        <a href="post.xhtml">POST</a>
-        <a href="feed.xhtml">FEED</a>
-        <a href="index.xhtml">LOG IN/REGISTER</a>
-        <a href="profile.xhtml">PROFILE</a>
-    </div>
+<div id="navbar">
+    <h:outputLink value="index.xhtml" id="logo"><span style="color: dodgerblue;">Great</span><span style="color: slategray;">Finds</span></h:outputLink>
+    <ul id="nav-right">
+        <li><h:link value="POST" outcome="post.xhtml"/></li>
+        <li><h:link value="FEED" outcome="feed.xhtml"/></li>
+        <li><h:link value="LOG IN/REGISTER" outcome="index.xhtml"/></li>
+        <li><h:link value="PROFILE" outcome="profile.xhtml"/></li>
+    </ul>
 </div>
-
 
 <div class="container">
     <h1>Content Feed</h1>
-
     <div id="feed-container">
 
         <div id="sidebar-search">
             <h3>Search</h3>
 
-            <h4>Media Category</h4>
-            <ul>
-                <li>Movies</li>
-                <li>Tv Shows</li>
-                <li>Documentaries</li>
-                <li>Podcasts</li>
-            </ul>
+            <h:form>
+                <h4 class="search-header">Media Category</h4>
+                <h:selectManyCheckbox layout="pageDirection" value="#{searchBean.categories}">
+                    <f:selectItem itemValue="movies" itemLabel="Movies" />
+                    <f:selectItem itemValue="tv" itemLabel="TV Shows" />
+                    <f:selectItem itemValue="documentaries" itemLabel="Documentaries" />
+                    <f:selectItem itemValue="podcasts" itemLabel="Podcasts" />
+                </h:selectManyCheckbox>
 
-            <h4>Genre</h4>
-            <ul>
-                <li>Sci-Fi</li>
-                <li>Non-Fiction</li>
-                <li>Fantasy</li>
-                <li>Mystery</li>
-            </ul>
+                <h4 class="search-header">Genre</h4>
+                <h:selectManyCheckbox layout="pageDirection" value="#{searchBean.genres}">
+                    <f:selectItem itemValue="scifi" itemLabel="Sci-Fi" />
+                    <f:selectItem itemValue="nonfiction" itemLabel="Non-Fiction" />
+                    <f:selectItem itemValue="fantasy" itemLabel="Fantasy" />
+                    <f:selectItem itemValue="mystery" itemLabel="Mystery" />
+                    <f:selectItem itemValue="action" itemLabel="Action" />
+                    <f:selectItem itemValue="comedy" itemLabel="Comedy" />
+                </h:selectManyCheckbox>
+
+                <h:commandButton value="Search" action="#{searchBean.search}" />
+            </h:form>
         </div>
 
         <div id="content-feed">
             <ui:repeat value="#{globalBean.allPosts}" var="post">
                 <div class="post">
                     <div class="post-content">
-                        <div class="username">#{post.user.displayName}</div>
                         <div class="media-title-container">
                             <div class="media-title">#{post.mediaTitle.title}</div>
-                            <div class="rating">#{post.rating}</div>
+                            <div class="rating">G-Rating: #{post.rating}</div>
                         </div>
-                        <div class="username">#{post.user.displayName}: </div>
-                        <div class="caption">#{post.caption}</div>
+                        <div>
+                            <span class="username">#{post.user.displayName}:</span>
+                            <span class="caption">#{post.caption}</span>
+                        </div>
+
                         <div class="tag-list">
-                            <div class="tag">tag 1</div>
-                            <div class="tag">tag 2</div>
+                            <ui:repeat value="#{post.tags}" var="tag">
+                                <div class="tag">##{tag}</div>
+                            </ui:repeat>
                         </div>
                     </div>
+
                     <div class="post-footer">
-                        <div class="like">Like</div>
-                        <div class="comment">Comment</div>
+                        <h:form>
+                            <h:commandLink action="#{post.addLike}" value="Like" class="post-interact"/>
+                            <h:commandLink action="#{post.addComment}" value="Comment" class="post-interact"/>
+                        </h:form>
+                        <div class="like-counter">#{post.numLikes} Likes</div>
                     </div>
                 </div>
             </ui:repeat>
-
-
-
-            <div class="post">
-                <div class="username">User's name</div>
-                <div class="media-title-container">
-                    <div class="media-title">Name of the movie / tv show / etc.</div>
-                    <div class="rating">Rating: * * * * *</div>
-                </div>
-                <div class="caption">This is a caption for movie or tv show.</div>
-                <div class="tag-list">
-                    <a class="tag">tag 1</a><a class="tag">tag 2</a>
-                </div>
-            </div>
         </div>
-
     </div>
 </div>
 
