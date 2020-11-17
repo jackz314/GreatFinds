@@ -51,7 +51,8 @@ h2, h3 {
     padding: 0 !important;
 }
 
-/* feed.xhtml */
+/* navbar.xhtml
+---------------------------------------------------------------------------------------------------------*/
 #navbar {
     height: 50px;
     background-color: white;
@@ -61,10 +62,10 @@ h2, h3 {
     padding: 10px;
 }
 
-#logo {
+.logo {
     font-size: 20pt;
     font-weight: bold;
-    text-decoration: none;
+    text-decoration: dotted;
 }
 
 #nav-right {
@@ -84,15 +85,14 @@ h2, h3 {
 
 
 #navbar a {
-    font-family: "Tahoma";
     text-decoration: none;
     padding: 26px 15px;
-    font-size: 22px;
-    color: #99a1a3;
+    font-size: 18px;
+    color: slategray;
 }
 
 #navbar a:hover {
-    color: #cff4ff;
+    color: lightblue;
 }
 
 /* feed.xhtml

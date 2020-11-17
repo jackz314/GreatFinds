@@ -3,7 +3,8 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://omnifaces.org/ui">
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://omnifaces.org/ui"
+      xmlns:components="http://java.sun.com/jsf/composite/components">
 <h:head>
     <h:outputStylesheet name="css/styles.css"/>
     <!--    comment out below if testing and don't want to redirect if logged in-->
@@ -12,17 +13,10 @@
     </h:panelGroup>
 </h:head>
 
-<div id="header">
-    <div id="logo">
-        <span id="logo-great">Great</span><span id="logo-finds">Finds</span>
-    </div>
-    <div id="navbar">
-        <a href="post.xhtml">POST</a>
-        <a href="feed.xhtml">FEED</a>
-        <a href="login.xhtml">LOG IN/REGISTER</a>
-        <a href="profile.xhtml">PROFILE</a>
-    </div>
-</div>
+
+<components:navbar/>
+
+
 
 <!-- User Authentication Form(s) -->
 <h:panelGroup rendered="#{not userBean.userLoggedIn}">

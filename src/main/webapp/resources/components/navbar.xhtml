@@ -1,0 +1,29 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:co="http://xmlns.jcp.org/jsf/composite">
+
+<!-- from https://www.tutorialspoint.com/jsf/jsf_composite_components.htm -->
+
+
+<h:head>
+    <h:outputStylesheet name="css/styles.css"/>
+</h:head>
+
+<co:interface/>
+
+<co:implementation>
+    <div id="navbar">
+        <h:outputLink value="index.xhtml"><span style="color: dodgerblue;" class="logo">Great</span><span style="color: slategray;" class="logo">Finds</span></h:outputLink>
+        <ul id="nav-right">
+            <li><h:link value="POST" outcome="post.xhtml"/></li>
+            <li><h:link value="FEED" outcome="feed.xhtml"/></li>
+            <li><h:link value="LOG IN/REGISTER" outcome="index.xhtml"/></li>
+            <li><h:link value="PROFILE" outcome="profile.xhtml"/></li>
+        </ul>
+    </div>
+</co:implementation>
+
+</html>
