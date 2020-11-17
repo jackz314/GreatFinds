@@ -78,6 +78,10 @@ h2, h3 {
     border-right: 2px solid black;
 }
 
+#nav-right li:first-child {
+    margin-left: 10px;
+}
+
 #nav-right li:last-child {
     margin: 0;
     border-width: 0;
@@ -104,7 +108,7 @@ h2, h3 {
 #sidebar-search {
     border-right: 2px solid slategray;
     padding: 10px;
-    width: 150px;
+    width: 200px;
 }
 
 #sidebar-search .search-header {
