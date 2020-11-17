@@ -115,6 +115,13 @@ public class Post {
         return rating;
     }
 
+    public String getGscore() {
+        int r = this.rating;
+        if(this.rating==1) return "Garbage";
+        else if(this.rating==2) return "Good";
+        else return "Great";
+    }
+
     public void setRating(Integer rating) {
         this.rating = rating;
     }
