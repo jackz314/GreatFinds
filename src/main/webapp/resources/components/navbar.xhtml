@@ -22,7 +22,7 @@
                     rendered="#{userBean.isUserLoggedIn() and (request.requestURI.substring(request.requestURI.lastIndexOf('/')).equals('/index.xhtml') or request.requestURI.lastIndexOf('/') == request.requestURI.length() - 1)}">
                 <li><a href="#" onclick="PF('postDialog').show();">POST</a></li>
             </ui:fragment>
-            <li><h:link value="FEED" outcome="feed.xhtml"/></li>
+            <li><h:link value="FEED" outcome="index.xhtml"/></li>
             <li><h:form><h:commandLink value="#{userBean.loginOutText}" action="#{userBean.loginOutRedirect}"/></h:form>
             </li>
             <li><h:link value="PROFILE" outcome="profile.xhtml"/></li>

@@ -76,7 +76,7 @@ h2, h3 {
     color: lightblue;
 }
 
-/* feed.xhtml
+/* index.xhtml
 ---------------------------------------------------------------------------------------------------------*/
 #feed-container {
     display: flex;
@@ -161,9 +161,9 @@ h2, h3 {
     font-weight: 600;
     text-decoration: none;
 }
-/* end feed.xhtml */
+/* end index.xhtml */
 
-/* index.xhtml
+/* debug.xhtml
 ---------------------------------------------------------------------------------------------------------*/
 #test {
     color: blue;

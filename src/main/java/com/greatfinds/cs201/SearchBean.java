@@ -32,7 +32,7 @@ public class SearchBean implements Serializable {
     public String search() {
         // Run SQL command
         posts = postHelper.getPostsWith(categories, genres);
-        return "feed";
+        return "index";
     }
 
 

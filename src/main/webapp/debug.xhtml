@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--suppressed because intellij is wrong :)-->
+<!--suppress ELSpecValidationInJSP -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ds="http://deltaspike.apache.org/jsf"
+      xmlns:cp="http://java.sun.com/jsf/composite/customizedprimefaces"
+      xmlns:components="http://java.sun.com/jsf/composite/components"
+>
+
+<h:head>
+    <h:outputStylesheet name="css/styles.css"/>
+</h:head>
+
+<components:navbar/>
+
+<div style="flex: 1; overflow: auto">
+    <f:view>
+        <!--    <h:outputLabel value="Hello, world"/>-->
+        <h3>#{entryBean.randNum}</h3>
+        <h3>JSF Version: #{entryBean.JSFVersion}</h3>
+        <a href="entries.xhtml">Datatable test</a>
+        <a href="jsp_test.jsp">JSP test</a>
+        <p id="test">
+            Hello, this is the test of the css stuff. This text should be blue!
+        </p>
+        <br/>
+    </f:view>
+
+    <h:form>
+        <p:inputText value="#{entryBean.inputEntry.msg}"/>
+        <p:commandButton value="Submit Entry" ajax="true" action="#{entryBean.submit}">
+            <f:ajax execute="@form" render="@form entries"/>
+        </p:commandButton>
+    </h:form>
+
+    <p id="loginStatus">Login status: #{userBean.loginStatus}</p>
+
+    <!-- User Authentication Form(s) -->
+    <h:panelGroup rendered="#{not userBean.userLoggedIn}">
+        <h4>Registration</h4>
+        <h:form binding="#{registerForm}">
+            <p> Username: <p:inputText id="usernameInput" value="#{userBean.registerUser.displayName}" required="true"
+                                       requiredMessage="Please enter a username."/>
+                Email: <p:inputText id="emailInput" value="#{userBean.registerUser.email}" required="true"
+                                    requiredMessage="Please enter a valid email."
+                                    validator="#{userBean.validateRegisterEmail}"/>
+                Password: <p:password id="pwdInput" value="#{userBean.registerUser.pwd}" required="true"
+                                      requiredMessage="Please enter a password."/>
+            </p>
+            <p:messages rendered="#{registerForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" id="reg_msgs"/>
+            <p:commandButton value="Register" ajax="true" action="#{userBean.register}">
+                <f:ajax execute="@form" render="@form users"/>
+            </p:commandButton>
+        </h:form>
+
+        <h4>Login</h4>
+        <h:form binding="#{loginForm}">
+            <p> Email: <p:inputText id="emailLogin" value="#{userBean.loginUser.email}" required="true"
+                                    requiredMessage="Please enter a valid email. "
+                                    validator="#{userBean.validateLoginEmail}"/>
+                Password: <p:password id="pwdLogin" value="#{userBean.loginUser.pwd}"
+                                      required="true" requiredMessage="Please enter a password. "/>
+            </p>
+            <o:validateMultiple components="emailLogin pwdLogin" validator="#{userBean.validateLogin}"
+                                message="Incorrect email or password."/>
+            <p:messages rendered="#{loginForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" redisplay="false"
+                        id="login_msgs"/>
+            <p:commandButton value="Login" ajax="true" action="#{userBean.login}">
+                <f:ajax execute="@form" render="@all"/>
+            </p:commandButton>
+        </h:form>
+
+        <br/>
+    </h:panelGroup>
+
+    <!--shown if user is logged in-->
+    <h:panelGroup rendered="#{userBean.userLoggedIn}">
+        <p:dialog header="Create post" widgetVar="postDialog" modal="true" draggable="false" resizable="false"
+                  responsive="true" showHeader="true" closeOnEscape="true">
+            <h:form binding="#{postForm}">
+                <p> Title: <p:autoComplete id="titleInput" value="#{userBean.inputPost.mediaTitle}"
+                                           panelStyleClass="autocomplete-dropdown"
+                                           minQueryLength="1" maxResults="10" maxlength="100"
+                                           emptyMessage="No titles found in the database" cache="true" cacheTimeout="30"
+                                           autoSelection="true" autoHighlight="true"
+                                           var="title" converter="mediaTitleConverter"
+                                           itemLabel="#{title.title}" itemValue="#{title}"
+                                           completeMethod="#{userBean.mediaTitleDropdown}"
+                                           placeholder="Enter a title.." dynamic="true"
+                                           required="true" requiredMessage="Please enter a media title">
+                    <p:ajax event="itemSelect" listener="#{userBean.dropdownItemSelected}" update="genreInput"/>
+
+                    <p:column>
+                        <table>
+                            <tr>
+                                <td><h:graphicImage style=" vertical-align: middle; margin-right: 5px"
+                                                    url="#{title.imgUrl}" height="50"/></td>
+                                <td><h:outputText style="vertical-align: middle"
+                                                  value="#{userBean.boldMatchedText(title.title)}"
+                                                  escape="false"/> / #{title.genre} #{title.suggested ? " (suggested)" : ""}
+                                </td>
+                            </tr>
+                        </table>
+                    </p:column>
+
+                </p:autoComplete>
+                    &nbsp;Genre: <p:inputText id="genreInput" value="#{userBean.inputPost.mediaTitle.genre}"
+                                              required="true" placeholder="Enter a genre.."
+                                              requiredMessage="Please enter a genre"/>
+                </p>
+
+                Caption: <p:inputText id="postInput" value="#{userBean.inputPost.caption}" required="true"
+                                      placeholder="Enter a caption.."
+                                      requiredMessage="Please enter a caption"/>
+                &nbsp;Rating: <cp:ratingComposite id="ratingInput" value="#{userBean.inputPost.rating}"
+                                                  required="true"
+                                                  cancel="false" style="display: inline-block"
+                                                  requiredMessage="Please enter a rating"
+                                                  validator="#{userBean.validateRating}"
+                                                  stars="3" tooltipValue="Garbage|Good|Great"/>
+                <p/>
+                <p:commandButton value="Submit Post" ajax="true" action="#{userBean.submitPost}"
+                                 update="@form userFeed globalFeed titles"
+                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('postDialog').hide();">
+                    <!--                <f:ajax execute="@form" render="@form userFeed globalFeed titles"/>-->
+                </p:commandButton>
+                <p:messages rendered="#{postForm.submitted}" infoClass="errorMsg" errorClass="errorMsg"
+                            redisplay="false"
+                            id="post_msgs"/>
+            </h:form>
+        </p:dialog>
+        <h:form>
+            Tags:
+            <p:inputText id="tagInput" value="#{userBean.tagStr}">
+                <f:ajax event="keyup" render="userFeed loginStatus"/>
+            </p:inputText>
+            <br/>
+            <p:commandButton value="Log out" ajax="true" action="#{userBean.logOut}">
+                <f:ajax execute="@form" render="@all"/>
+            </p:commandButton>
+        </h:form>
+
+
+    </h:panelGroup>
+
+    <br/>
+
+    <h2>Feed</h2>
+    <h:dataTable id="userFeed" value="#{userBean.posts}" var="post">
+        <h:column><f:facet name="header">Image</f:facet>
+            <h:graphicImage url="#{post.mediaTitle.imgUrl}" width="100"/> </h:column>
+        <h:column><f:facet name="header">Title</f:facet>
+            #{post.mediaTitle}</h:column>
+        <h:column><f:facet name="header">Caption</f:facet>
+            #{post.caption}</h:column>
+        <h:column><f:facet name="header">Time</f:facet>
+            #{post.timestamp}</h:column>
+        <h:column><f:facet name="header">G-Score</f:facet>
+            #{post.rating}</h:column>
+        <h:column><f:facet name="header">Likes</f:facet>
+            #{post.numLikes}</h:column>
+    </h:dataTable>
+
+    <br/>
+    <h3>--Debugging Info Below--</h3>
+
+    <!--<h2>Entries</h2>-->
+    <!--<h:dataTable id="entries" value="#{entryBean.entries}" var="entry">-->
+    <!--    <h:column>#{entry.msg}</h:column>-->
+    <!--</h:dataTable>-->
+
+    <h2>User Table</h2>
+    <h:dataTable id="users" value="#{globalBean.allUsers}" var="user">
+        <h:column><f:facet name="header">Name</f:facet>#{user.displayName}</h:column>
+        <h:column><f:facet name="header">Email</f:facet>#{user.email}</h:column>
+        <h:column><f:facet name="header">Password</f:facet>#{user.pwd}</h:column>
+    </h:dataTable>
+
+    <h2>Media Title Table</h2>
+    <p:dataTable var="title" value="#{globalBean.allMediaTitles}" rows="10"
+                 paginator="true" id="titles"
+                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                 rowsPerPageTemplate="5,10,15">
+        <p:column><f:facet name="header">Image</f:facet>
+            <h:graphicImage url="#{title.imgUrl}" width="100"/> </p:column>
+        <p:column><f:facet name="header">Title</f:facet>#{title.title}</p:column>
+        <p:column><f:facet name="header">Genre</f:facet>#{title.genre}</p:column>
+    </p:dataTable>
+
+    <h2>Global Feed</h2>
+    <h:dataTable id="globalFeed" value="#{globalBean.allPosts}" var="post">
+        <h:column><f:facet name="header">Image</f:facet>
+            <h:graphicImage url="#{post.mediaTitle.imgUrl}" width="100"/> </h:column>
+        <h:column><f:facet name="header">Title</f:facet>
+            #{post.mediaTitle}</h:column>
+        <h:column><f:facet name="header">Caption</f:facet>
+            #{post.caption}</h:column>
+        <h:column><f:facet name="header">Time</f:facet>
+            #{post.timestamp}</h:column>
+        <h:column><f:facet name="header">G-Score</f:facet>
+            #{post.rating}</h:column>
+        <h:column><f:facet name="header">Likes</f:facet>
+            #{post.numLikes}</h:column>
+    </h:dataTable>
+
+    <!--listen to websocket for changes and update entries when changed-->
+
+    <ds:windowId/>
+</div>
+</html>
