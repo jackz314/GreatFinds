@@ -1,8 +1,12 @@
 package com.greatfinds.cs201.db.em;
 
+import com.greatfinds.cs201.TmdbHelper;
 import com.greatfinds.cs201.db.MediaTitle;
 import com.greatfinds.cs201.db.Post;
 import com.greatfinds.cs201.db.User;
+import info.movito.themoviedbapi.TmdbMovies;
+import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.core.MovieResultsPage;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -23,6 +27,12 @@ import java.util.List;
 public class EMF implements ServletContextListener {
 
     private static EntityManagerFactory emf;
+    private static EntityManager entityManager;
+
+    private static EntityManager getEntityManager() {
+        if (entityManager == null) entityManager = createEntityManager();
+        return entityManager;
+    }
 
     public static void createDBIfNotExists() {
         try {
@@ -47,18 +57,37 @@ public class EMF implements ServletContextListener {
                 new User("Test User 1", "abc", "def"),
                 new User("Test User 2", "123", "456")
         );
-        EntityManager entityManager = createEntityManager();
+        EntityManager entityManager = getEntityManager();
         entityManager.getTransaction().begin();
         for (User user : users) {
             user.setFollowedTags(Collections.singleton("all"));
             entityManager.persist(user);
         }
         entityManager.getTransaction().commit();
-        entityManager.close();
+    }
+
+    public static void saveMovieTitles(EntityManager entityManager) {
+        System.out.println("Getting and saving movie titles");
+        TmdbMovies tmdbMovies = TmdbHelper.getTmdbApi().getMovies();
+        int totalCnt = 0;
+        int pageCnt = 1;
+        for (int i = 1; i <= pageCnt; i++) {
+            MovieResultsPage resultsPage = tmdbMovies.getNowPlayingMovies("en", i, "US");
+            pageCnt = resultsPage.getTotalPages();
+            List<MovieDb> movies = resultsPage.getResults();
+            for (MovieDb movie : movies) {
+                if (movie.getTitle() == null) continue;
+                MediaTitle title = TmdbHelper.getMediaTitleFromMovieDb(movie);
+                title.setImgUrl(TmdbHelper.imageBaseUrl + movie.getPosterPath());
+                entityManager.persist(title);
+                ++totalCnt;
+            }
+        }
+        System.out.println("Saved " + totalCnt + " movies.");
     }
 
     public void createTestPosts() {
-        EntityManager entityManager = createEntityManager();
+        EntityManager entityManager = getEntityManager();
         List<User> users = entityManager.createNamedQuery("getAllUsers", User.class).getResultList();
         List<MediaTitle> titles = Arrays.asList(
                 new MediaTitle("Fast and Furious", "action"),
@@ -66,8 +95,9 @@ public class EMF implements ServletContextListener {
                 new MediaTitle("The Martian", "scifi")
         );
         titles.forEach(entityManager::persist);
+        saveMovieTitles(entityManager);
         List<Post> posts = Arrays.asList(
-                new Post(users.get(0), titles.get(0), "Vin Diesel is so cool", 4,
+                new Post(users.get(0), titles.get(0), "Vin Diesel is so cool", 3,
                         new HashSet<>(Arrays.asList("all", "testTag1"))),
                 new Post(users.get(1), titles.get(0), "The cars don't go fast enough", 1,
                         new HashSet<>(Arrays.asList("all", "testTag1"))),
@@ -80,15 +110,15 @@ public class EMF implements ServletContextListener {
         entityManager.getTransaction().begin();
         posts.forEach(entityManager::persist);
         entityManager.getTransaction().commit();
-        entityManager.close();
     }
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-//        createDBIfNotExists(); // uncomment if ran for the first time
+        createDBIfNotExists(); // uncomment if ran for the first time to create DB
         emf = Persistence.createEntityManagerFactory("greatFindsMySQL");
         createTestUsers();
         createTestPosts();
+        if (entityManager != null) entityManager.close();
     }
 
     @Override

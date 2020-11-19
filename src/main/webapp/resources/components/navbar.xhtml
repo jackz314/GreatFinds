@@ -3,11 +3,10 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:co="http://xmlns.jcp.org/jsf/composite">
+      xmlns:co="http://xmlns.jcp.org/jsf/composite" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <!-- from https://www.tutorialspoint.com/jsf/jsf_composite_components.htm and
           https://mkyong.com/jsf2/composite-components-in-jsf-2-0/ -->
-
 
 <h:head>
     <h:outputStylesheet name="css/styles.css"/>
@@ -19,11 +18,13 @@
     <div id="navbar">
         <h:outputLink value="index.xhtml"><span style="color: dodgerblue;" class="logo">Great</span><span style="color: slategray;" class="logo">Finds</span></h:outputLink>
         <ul id="nav-right">
-            <h:outputLabel rendered="#{userBean.isUserLoggedIn() and (request.requestURI.equals('/index.xhtml') or request.requestURI.equals('/'))}">
-                <a href="#" onclick="PF('postDialog').show();">POST</a>
-            </h:outputLabel>
+            <ui:fragment
+                    rendered="#{userBean.isUserLoggedIn() and (request.requestURI.substring(request.requestURI.lastIndexOf('/')).equals('/index.xhtml') or request.requestURI.lastIndexOf('/') == request.requestURI.length() - 1)}">
+                <li><a href="#" onclick="PF('postDialog').show();">POST</a></li>
+            </ui:fragment>
             <li><h:link value="FEED" outcome="feed.xhtml"/></li>
-            <li><h:link value="LOG IN/REGISTER" outcome="login.xhtml"/></li>
+            <li><h:form><h:commandLink value="#{userBean.loginOutText}" action="#{userBean.loginOutRedirect}"/></h:form>
+            </li>
             <li><h:link value="PROFILE" outcome="profile.xhtml"/></li>
         </ul>
     </div>

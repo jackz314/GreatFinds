@@ -96,9 +96,11 @@ public class GlobalBean {
 
     public void registerUserBean(UserBean userBean) {
         userBeans.add(userBean);
+        System.out.println("Registered new user bean: " + userBeans.size() + " " + userBeans);
     }
 
     public void unregisterUserBean(UserBean userBean) {
         userBeans.remove(userBean);
+        System.out.println("Unegistered new user bean: " + userBeans.size() + " " + userBeans);
     }
 }

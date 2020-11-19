@@ -5,7 +5,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:components="http://java.sun.com/jsf/composite/components"
+      xmlns:components="http://java.sun.com/jsf/composite/components" xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
 >
 
 <h:head>
@@ -14,9 +15,9 @@
 
 <h:body>
 
-<components:navbar/>
+    <components:navbar/>
 
-<div style="flex: 1; overflow: auto">
+    <div style="flex: 1; overflow: auto">
 <div class="container">
     <h1>Content Feed</h1>
     <div id="feed-container">
@@ -26,31 +27,32 @@
 
             <h:form>
                 <h4 class="search-header">Media Category</h4>
-                <h:selectManyCheckbox layout="pageDirection" value="#{searchBean.categories}">
-                    <f:selectItem itemValue="movies" itemLabel="Movies" />
-                    <f:selectItem itemValue="tv" itemLabel="TV Shows" />
-                    <f:selectItem itemValue="documentaries" itemLabel="Documentaries" />
-                    <f:selectItem itemValue="podcasts" itemLabel="Podcasts" />
-                </h:selectManyCheckbox>
+                <p:selectManyCheckbox layout="pageDirection" value="#{searchBean.categories}">
+                    <f:selectItem itemValue="movies" itemLabel="Movies"/>
+                    <f:selectItem itemValue="tv" itemLabel="TV Shows"/>
+                    <f:selectItem itemValue="documentaries" itemLabel="Documentaries"/>
+                    <f:selectItem itemValue="podcasts" itemLabel="Podcasts"/>
+                </p:selectManyCheckbox>
 
                 <h4 class="search-header">Genre</h4>
-                <h:selectManyCheckbox layout="pageDirection" value="#{searchBean.genres}">
-                    <f:selectItem itemValue="scifi" itemLabel="Sci-Fi" />
-                    <f:selectItem itemValue="nonfiction" itemLabel="Non-Fiction" />
-                    <f:selectItem itemValue="fantasy" itemLabel="Fantasy" />
-                    <f:selectItem itemValue="mystery" itemLabel="Mystery" />
-                    <f:selectItem itemValue="action" itemLabel="Action" />
-                    <f:selectItem itemValue="comedy" itemLabel="Comedy" />
-                </h:selectManyCheckbox>
-
-                <h:commandButton value="Search" action="#{searchBean.search}" />
+                <p:selectManyCheckbox layout="pageDirection" value="#{searchBean.genres}">
+                    <f:selectItem itemValue="scifi" itemLabel="Sci-Fi"/>
+                    <f:selectItem itemValue="nonfiction" itemLabel="Non-Fiction"/>
+                    <f:selectItem itemValue="fantasy" itemLabel="Fantasy"/>
+                    <f:selectItem itemValue="mystery" itemLabel="Mystery"/>
+                    <f:selectItem itemValue="action" itemLabel="Action"/>
+                    <f:selectItem itemValue="comedy" itemLabel="Comedy"/>
+                </p:selectManyCheckbox>
+                <br/>
+                <p:commandButton value="Search" action="#{searchBean.search}"/>
             </h:form>
         </div>
 
-        <div id="content-feed">
+        <h:panelGroup layout="block" id="content-feed">
             <ui:repeat value="#{searchBean.posts}" var="post">
                 <div class="post">
-                    <div class="post-content">
+                    <h:graphicImage url="#{post.mediaTitle.imgUrl}" width="100"/>
+                    <div class="post-content" style="display: inline-block; vertical-align: top;">
                         <div class="media-title-container">
                             <div class="media-title">#{post.mediaTitle.title}</div>
                             <div class="rating">G-Rating: #{post.getGscore()}</div>
@@ -72,18 +74,25 @@
 
                     <div class="post-footer">
                         <h:form>
-                            <h:commandLink action="#{post.addLike}" value="Like" class="post-interact"/>
-                            <h:commandLink action="#{post.addComment}" value="Comment" class="post-interact"/>
+                            <p:commandLink action="#{userBean.likeOrUnlikePost(post)}" update="@form"
+                                           value="#{post.userLiked(userBean.loginUser) ? 'Unlike' : 'Like'}"
+                                           class="post-interact"/>
+                            <p:commandLink action="#{post.addComment}" value="Comment" class="post-interact"/>
+                            <span class="like-counter">#{post.numLikes} Likes</span>
                         </h:form>
-                        <div class="like-counter">#{post.numLikes} Likes</div>
                     </div>
                 </div>
             </ui:repeat>
-        </div>
+        </h:panelGroup>
     </div>
 </div>
 </div>
-
+    <h:form>
+        <!--suppress ReservedWordAsName ide bug with JS anonymous function-->
+        <o:socket channel="pushCh" scope="view" onmessage="function(m){console.log(m + ' feed');}">
+            <p:ajax event="updatePosts" update="content-feed"/>
+        </o:socket>
+    </h:form>
 </h:body>
 
 </html>

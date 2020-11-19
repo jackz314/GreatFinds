@@ -3,6 +3,7 @@ package com.greatfinds.cs201;
 import com.greatfinds.cs201.db.MediaTitle;
 import com.greatfinds.cs201.db.Post;
 import com.greatfinds.cs201.db.User;
+import info.movito.themoviedbapi.model.Multi;
 import org.apache.deltaspike.core.api.scope.WindowScoped;
 import org.omnifaces.cdi.Push;
 import org.omnifaces.cdi.PushContext;
@@ -19,13 +20,17 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 //user session scoped, one instance per user, including anonymous/guest users
 
 @Named
 @WindowScoped
 public class UserBean implements Serializable {
+
+    private UUID uuid;
 
     private User registerUser;
     private User loginUser;
@@ -35,8 +40,10 @@ public class UserBean implements Serializable {
 
     private String tagStr;
 
+    private String loginOutText = "LOG IN/REGISTER";
+
     @Inject
-    private GlobalBean globalBean;
+    transient private GlobalBean globalBean;
 
     //we're injecting EJB here, not regular CDI, so we don't need to implement serializable and it'll still work
     @SuppressWarnings("CdiUnproxyableBeanTypesInspection")
@@ -64,6 +71,7 @@ public class UserBean implements Serializable {
         posts = postHelper.getAllPosts();//start with guest posts (no filter)
         registerUser = new User();
         loginUser = new User();
+        uuid = UUID.randomUUID();
         globalBean.registerUserBean(this);
     }
 
@@ -101,16 +109,21 @@ public class UserBean implements Serializable {
         }*/
     }
 
-    /*@SuppressWarnings("unused")
-    public void validateLogin(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        System.out.println("VALIDATING LOGIN");
-        UIInput loginEmailInput = (UIInput) context.getViewRoot().findComponent("emailLogin");
-        String email = (String) loginEmailInput.getSubmittedValue();
-        String pwd = (String) value;
-        if (!userHelper.userMatch(email, pwd)) {
-            throw new ValidatorException(new FacesMessage("Incorrect email or password."));
+    public void validateRating(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        int rating = (Integer) value;
+        System.out.println("Validating rating " + rating);
+        if (rating > 3 || rating < 1) {
+            throw new ValidatorException(new FacesMessage("Invalid rating."));
         }
-    }*/
+    }
+
+    public String getLoginOutText() {
+        return loginOutText;
+    }
+
+    public void setLoginOutText(String loginOutText) {
+        this.loginOutText = loginOutText;
+    }
 
     @SuppressWarnings("unused")
     public boolean validateLogin(FacesContext context, List<UIInput> components, List<Object> values) throws ValidatorException {
@@ -127,6 +140,7 @@ public class UserBean implements Serializable {
     public void login() {
 //        isUserLoggedIn = userHelper.userMatch(loginUser.getEmail(), loginUser.getPwd());
         isUserLoggedIn = true;
+        loginOutText = "LOG OUT";
         populateUserInfo();
         inputPost = new Post();
         Set<String> followedTags = loginUser.getFollowedTags();
@@ -141,13 +155,25 @@ public class UserBean implements Serializable {
         return "index.xhtml?faces-redirect=true";
     }
 
+    public String loginOutRedirect() {
+        if (isUserLoggedIn) {
+            logOut();
+            return "index.xhtml?faces-redirect=true";
+        } else {
+            return "login.xhtml?faces-redirect=true";
+        }
+    }
+
     public void logOut() {
         isUserLoggedIn = false;
+        loginOutText = "LOG IN/REGISTER";
         loginUser = new User();
         posts = postHelper.getAllPosts();
     }
 
-    public boolean isUserLoggedIn() { return isUserLoggedIn; }
+    public boolean isUserLoggedIn() {
+        return isUserLoggedIn;
+    }
 
     public String getLoginStatus() {
         return isUserLoggedIn ? "logged in!\n" + loginUser : "not logged in.";
@@ -205,7 +231,30 @@ public class UserBean implements Serializable {
 
     public List<MediaTitle> mediaTitleDropdown(String filter) {
         this.filter = filter.toLowerCase();
-        return mediaTitleHelper.getMatchedMediaTitles(filter);
+        List<MediaTitle> titles = mediaTitleHelper.getMatchedMediaTitles(filter);
+        List<Multi> results = TmdbHelper.getTmdbSearch().searchMulti(filter, "en", 1).getResults();
+        int num = Math.min(results.size(), 5);
+        for (int i = 0; i < num; i++) {
+            Multi result = results.get(i);
+            MediaTitle title = TmdbHelper.getMediaTitleFromMulti(result);
+            if (title != null) {
+                if (titles.contains(title)) {
+                    num = Math.min(results.size(), num + 1);
+                    continue;
+                }
+                title.setSuggested(true);
+                titles.add(title);
+            }
+        }
+        return titles;
+    }
+
+    public void likeOrUnlikePost(Post post) {
+        System.out.println("Liking post " + post);
+        if (!isUserLoggedIn) return;
+        post.likeOrUnlike(loginUser);
+        postHelper.updatePost(post);
+        pushCh.send("updatePosts");
     }
 
     public void submitPost() {
@@ -213,5 +262,39 @@ public class UserBean implements Serializable {
         mediaTitleHelper.processPostMediaTitle(inputPost);
         postHelper.post(inputPost);
         inputPost = new Post();
+    }
+
+    @Override
+    public String toString() {
+        return "UserBean{" +
+                "registerUser=" + registerUser +
+                ", loginUser=" + loginUser +
+                ", isUserLoggedIn=" + isUserLoggedIn +
+                ", filter='" + filter + '\'' +
+                ", tagStr='" + tagStr + '\'' +
+                ", loginOutText='" + loginOutText + '\'' +
+                ", globalBean=" + globalBean +
+                ", postHelper=" + postHelper +
+                ", inputPost=" + inputPost +
+                ", posts=" + posts +
+                ", mediaTitleHelper=" + mediaTitleHelper +
+                ", userHelper=" + userHelper +
+                ", pushCh=" + pushCh +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserBean)) return false;
+
+        UserBean bean = (UserBean) o;
+
+        return Objects.equals(uuid, bean.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return uuid != null ? uuid.hashCode() : 0;
     }
 }

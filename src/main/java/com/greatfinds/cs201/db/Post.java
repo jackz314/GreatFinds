@@ -3,7 +3,9 @@ package com.greatfinds.cs201.db;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +15,7 @@ import java.util.Set;
         @NamedQuery(name = "getAllPosts", query = "SELECT p from Post p ORDER BY p.timestamp DESC"),
 //    @NamedQuery(name = "getFollowedPosts", query = "SELECT p from Post p WHERE :tag MEMBER OF p.tags"),
 })
-public class Post {
+public class Post implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +41,9 @@ public class Post {
     @ElementCollection
     private Set<String> tags;
 
+    @ElementCollection
+    private Set<Long> likedUsers;
+
     //mapped in comment class
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
@@ -62,7 +67,6 @@ public class Post {
 
     public Post() {
         mediaTitle = new MediaTitle();
-        rating = 1;
     }
 
     @Override
@@ -82,9 +86,39 @@ public class Post {
         comment.setPost(null);
     }
 
-    public void addLike(){
-        ++numLikes;
-        System.out.println("added like to post");
+    public void likeOrUnlike(User user) {
+        if (userLiked(user)) {
+            removeLike(user);
+        } else {
+            addLike(user);
+        }
+    }
+
+    public void addLike(User user) {
+        if (likedUsers == null) likedUsers = new HashSet<>();
+        boolean res = likedUsers.add(user.getUserID());
+        if (res) {
+            ++numLikes;
+            System.out.println("added like to post from " + user);
+        } else {
+            System.out.println("add like to post failed from " + user);
+        }
+    }
+
+    public void removeLike(User user) {
+        if (likedUsers == null) return;
+        boolean res = likedUsers.remove(user.getUserID());
+        if (res) {
+            --numLikes;
+            System.out.println("added like to post from " + user);
+        } else {
+            System.out.println("add like to post failed from " + user);
+        }
+    }
+
+    public boolean userLiked(User user) {
+        if (user == null) return false;
+        return likedUsers.contains(user.getUserID());
     }
 
     public User getUser() {
@@ -152,6 +186,14 @@ public class Post {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Set<Long> getLikedUsers() {
+        return likedUsers;
+    }
+
+    public void setLikedUsers(Set<Long> likedUsers) {
+        this.likedUsers = likedUsers;
     }
 
     @Override

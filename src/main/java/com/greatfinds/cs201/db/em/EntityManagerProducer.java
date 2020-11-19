@@ -2,6 +2,7 @@ package com.greatfinds.cs201.db.em;
 
 
 import javax.ejb.Stateless;
+import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 
@@ -13,10 +14,14 @@ public class EntityManagerProducer {
   private EntityManager entityManager;
 
   @Produces
-  public EntityManager entityManager(){
+  public EntityManager entityManager() {
 
-    if(entityManager == null) entityManager = EMF.createEntityManager();
-    return entityManager;
+    return EMF.createEntityManager();
+//    return entityManager;
+  }
+
+  private void closeEM(@Disposes EntityManager entityManager) {
+    entityManager.close();
   }
 
 }

@@ -25,9 +25,9 @@
     <p>
         <h:panelGroup id="toggle">
             Push is #{pushBean.connected ? 'connected' : 'disconnected'}
-            <h:commandButton value="#{pushBean.connected ? 'disconnect' : 'connect'} it" action="#{pushBean.toggle}">
+            <p:commandButton value="#{pushBean.connected ? 'disconnect' : 'connect'} it" action="#{pushBean.toggle}">
                 <f:ajax render="toggle increment :count"/>
-            </h:commandButton>
+            </p:commandButton>
         </h:panelGroup>
     </p>
     <p>

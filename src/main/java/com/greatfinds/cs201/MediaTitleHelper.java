@@ -46,6 +46,7 @@ public class MediaTitleHelper {
     // uses %FILTER% match in MySQL
     public List<MediaTitle> getMatchedMediaTitles(String filter) {
         List<MediaTitle> resultList = entityManager.createNamedQuery("getMatchedMediaTitles", MediaTitle.class)
+                .setMaxResults(10)
                 .setParameter("filter", filter)
                 .getResultList();
 //        System.out.println("MEDIA TITLE RESULT: " + resultList);

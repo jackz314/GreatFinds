@@ -1,6 +1,13 @@
 package com.greatfinds.cs201.db;
 
 import javax.persistence.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -11,7 +18,7 @@ import java.util.Set;
         @NamedQuery(name = "userExists", query = "SELECT count(u) from User u WHERE u.email = :email"),
         @NamedQuery(name = "userMatches", query = "SELECT count(u) from User u WHERE u.email = :email AND u.pwd = :pwd"),
 })
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,6 +70,18 @@ public class User {
     }
 
     public String getBio() {
+        if (bio == null || bio.isEmpty()) {
+            try {
+                URL bioGenUrl = new URL("https://www.twitterbiogenerator.com/generate");
+                HttpURLConnection conn = (HttpURLConnection) bioGenUrl.openConnection();
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String bio = br.readLine();
+                br.close();
+                return bio;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return bio;
     }
 
@@ -80,6 +99,21 @@ public class User {
 
     public void unfollowTag(String tag) {
         followedTags.remove(tag);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        return Objects.equals(userID, user.userID);
+    }
+
+    @Override
+    public int hashCode() {
+        return userID != null ? userID.hashCode() : 0;
     }
 
     @Override

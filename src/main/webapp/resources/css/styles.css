@@ -6,7 +6,7 @@ html {
 
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: lightblue;
+    /*background-color: lightblue;*/
     background-color: #cff4ff;
     margin: 0;
     display: flex;
@@ -19,36 +19,13 @@ h2, h3 {
 }
 
 /*autocomplete*/
-.ui-state-highlight {
-    background: lightgray;
-}
-
-.ui-autocomplete-panel .ui-autocomplete-table td {
+.ui-autocomplete-panel .ui-autocomplete-table th, .ui-autocomplete-panel .ui-autocomplete-table td {
+    border-style: none !important;
     padding: 0 !important;
 }
 
-.ui-inputfield {
-    padding: 1px 2px !important;
-}
-
-.ui-shadow {
-    box-shadow: none !important;
-    -moz-box-shadow: none !important;
-    -o-box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-}
-
-.ui-autocomplete-emptyMessage {
-    border-width: 1px;
-    border-style: solid;
-    border-color: inherit;
-    color: gray;
-}
-
-.autocomplete-dropdown {
-    background: white;
-    line-height: normal !important;
-    padding: 0 !important;
+.autocomplete-dropdown .ui-state-highlight img {
+    height: 100px !important;
 }
 
 /* navbar.xhtml
@@ -123,7 +100,7 @@ h2, h3 {
 .post {
     border: 2px solid grey;
     background-color: white;
-    padding: 0px;
+    padding: 0;
     margin: 5px 0;
 }
 
@@ -204,8 +181,7 @@ h2, h3 {
     background-color: white;
     max-width: 600px;
     min-width: 400px;
-    margin: auto;
-    margin-top: 30px;
+    margin: 30px auto auto;
     padding: 20px;
 }
 
@@ -218,6 +194,6 @@ h2, h3 {
     font-family: "Tahoma", sans-serif;
     line-height: 200%;
     font-weight: bold;
-    font-size: 18;
+    font-size: 18px;
     color: #45cbf5;
 }

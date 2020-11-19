@@ -92,4 +92,11 @@ public class PostHelper {
         return entityManager.createNamedQuery("getAllPosts", Post.class).getResultList();
     }
 
+    public void updatePost(Post post) {
+        beginSession();
+        entityManager.merge(post);
+        commit();
+        beanManager.fireEvent(new PostUpdate(post, PostUpdate.Type.MODIFIED));
+    }
+
 }

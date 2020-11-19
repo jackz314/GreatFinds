@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+<!-- from https://stackoverflow.com/a/42374513/8170714 -->
+
+<composite:interface>
+    <composite:attribute name="id"/>
+    <composite:attribute name="value"/>
+    <composite:attribute name="readonly"/>
+    <composite:attribute name="widgetVar"/>
+    <composite:attribute name="required"/>
+    <composite:attribute name="requiredMessage"/>
+    <composite:attribute name="cancel"/>
+    <composite:attribute name="style"/>
+    <composite:attribute name="validator" method-signature="void f(javax.faces.context.FacesContext,
+                                     javax.faces.component.UIComponent,
+                                     java.lang.Object)"/>
+    <composite:attribute name="stars" type="java.lang.Integer"/>
+    <composite:attribute name="tooltipValue"
+                         shortDescription="A pipe(ie.:|) seperated list of tooltip messages. \nEach message in list corresponds to a star in the rating componant."/>
+    <!-- Add other attributes of p:rating component here. -->
+</composite:interface>
+
+<composite:implementation>
+    <h:outputScript name="js/ratingComposite.js" target="head"/>
+    <script type="text/javascript">
+        <!--
+        $(document).ready(function () {
+            rating.init('#{cc.namingContainer.clientId}:_#{cc.attrs.id}', '#{cc.namingContainer.clientId}:_#{cc.attrs.id}-ttId');
+        });
+
+        //-->
+    </script>
+    <p:rating id="_#{cc.attrs.id}" widgetVar="#{cc.attrs.widgetVar}" required="#{cc.attrs.required}"
+              requiredMessage="#{cc.attrs.requiredMessage}"
+              readonly="#{cc.attrs.readonly}" cancel="#{cc.attrs.cancel}" style="#{cc.attrs.style}"
+              validator="#{cc.attrs.validator}"
+              value="#{cc.attrs.value}" stars="#{cc.attrs.stars}"/>
+    <p:tooltip id="_#{cc.attrs.id}-ttId" for="_#{cc.attrs.id}" trackMouse="true" showEffect="fade" hideEffect="fade"
+               value="#{cc.attrs.tooltipValue}"/>
+</composite:implementation>
+</html>

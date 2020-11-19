@@ -1,5 +1,12 @@
 package com.greatfinds.cs201.db;
 
+import com.greatfinds.cs201.TmdbHelper;
+import info.movito.themoviedbapi.TmdbSearch;
+import info.movito.themoviedbapi.model.MovieDb;
+import info.movito.themoviedbapi.model.Multi;
+import info.movito.themoviedbapi.model.people.Person;
+import info.movito.themoviedbapi.model.tv.TvSeries;
+
 import javax.persistence.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -23,10 +30,21 @@ public class MediaTitle {
     @JoinColumn(name = "genre")
     private String genre;
     private String title;
+    private String imgUrl = null;
+
+    @Transient
+    private boolean suggested = false;
+
+    public MediaTitle(String title, String genre, String imgUrl) {
+        this.title = title;
+        this.genre = genre;
+        this.imgUrl = imgUrl;
+    }
 
     public MediaTitle(String title, String genre) {
         this.title = title;
         this.genre = genre;
+        populateImgUrl();
     }
 
     public MediaTitle() {
@@ -48,12 +66,34 @@ public class MediaTitle {
         this.title = title;
     }
 
-    public Long getMediaTitleID() {
-        return mediaTitleID;
+    public String getImgUrl() {
+        if (imgUrl == null) {
+            populateImgUrl();
+        }
+        return imgUrl;
     }
 
-    public void setMediaTitleID(Long ID) {
-        this.mediaTitleID = ID;
+    public boolean isSuggested() {
+        return suggested;
+    }
+
+    public void setSuggested(boolean suggested) {
+        this.suggested = suggested;
+    }
+
+    private void populateImgUrl() {
+        TmdbSearch search = TmdbHelper.getTmdbSearch();
+        Multi result = search.searchMulti(getTitle(), "en", 1).getResults().get(0);
+        switch (result.getMediaType()) {
+            case MOVIE -> imgUrl = ((MovieDb) result).getPosterPath();
+            case TV_SERIES -> imgUrl = ((TvSeries) result).getPosterPath();
+            case PERSON -> imgUrl = ((Person) result).getProfilePath();
+        }
+        imgUrl = TmdbHelper.imageBaseUrl + imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     @Override
