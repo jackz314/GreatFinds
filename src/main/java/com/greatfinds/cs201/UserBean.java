@@ -19,10 +19,7 @@ import javax.faces.validator.ValidatorException;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 //user session scoped, one instance per user, including anonymous/guest users
 
@@ -36,7 +33,8 @@ public class UserBean implements Serializable {
     private User loginUser;
     private boolean isUserLoggedIn = false;
 
-    private String filter;
+    private String dropdownFilter;
+    private String inputFilter;
 
     private String tagStr;
 
@@ -51,6 +49,11 @@ public class UserBean implements Serializable {
     transient private PostHelper postHelper;
     private Post inputPost;
     private List<Post> posts;
+    private List<Post> filteredPosts;
+
+    private List<String> categories;
+    private Set<String> genres;
+    private Set<String> availableGenres;
 
     @SuppressWarnings("CdiUnproxyableBeanTypesInspection")
     @Inject
@@ -191,6 +194,7 @@ public class UserBean implements Serializable {
                 case DELETED -> posts.remove(post);
                 case MODIFIED -> posts.set(posts.indexOf(post), post);
             }
+            updateAvailableGenres();
             pushCh.send("updatePosts");
         } catch (Exception e) {
             e.printStackTrace();
@@ -203,6 +207,7 @@ public class UserBean implements Serializable {
 
     public void setTagStr(String tagStr) {
         this.tagStr = tagStr;
+        System.out.println(tagStr);
         Set<String> tags = postHelper.extractTags(tagStr);
         loginUser.setFollowedTags(tags);
         posts = postHelper.getFollowedPosts(tags);
@@ -213,7 +218,8 @@ public class UserBean implements Serializable {
     }
 
     public List<Post> getPosts() {
-        return posts;
+        if (filteredPosts == null) return posts;
+        return filteredPosts;
     }
 
     public Post getInputPost() {
@@ -221,7 +227,7 @@ public class UserBean implements Serializable {
     }
 
     public String boldMatchedText(String title) {
-        return title.replaceAll("(?i)(^|)(" + filter + ")(|$)", "$1<b>$2</b>$3");
+        return title.replaceAll("(?i)(^|)(" + dropdownFilter + ")(|$)", "$1<b>$2</b>$3");
     }
 
     public void dropdownItemSelected(SelectEvent event) {
@@ -230,7 +236,7 @@ public class UserBean implements Serializable {
     }
 
     public List<MediaTitle> mediaTitleDropdown(String filter) {
-        this.filter = filter.toLowerCase();
+        this.dropdownFilter = filter.toLowerCase();
         List<MediaTitle> titles = mediaTitleHelper.getMatchedMediaTitles(filter);
         List<Multi> results = TmdbHelper.getTmdbSearch().searchMulti(filter, "en", 1).getResults();
         int num = Math.min(results.size(), 5);
@@ -264,13 +270,74 @@ public class UserBean implements Serializable {
         inputPost = new Post();
     }
 
+    public Set<String> getGenres() {
+        return genres;
+    }
+
+    public void updateAvailableGenres() {
+        availableGenres = new HashSet<>();
+        for (Post post : posts) {
+            String[] postGenres = post.getMediaTitle().getGenre().split(", ");
+            availableGenres.addAll(Arrays.asList(postGenres));
+        }
+    }
+
+    public String getInputFilter() {
+        return inputFilter;
+    }
+
+    public void setInputFilter(String inputFilter) {
+        this.inputFilter = inputFilter;
+    }
+
+    public Set<String> getAvailableGenres() {
+        if (availableGenres == null) updateAvailableGenres();
+        return availableGenres;
+    }
+
+    public void setAvailableGenres(Set<String> availableGenres) {
+        this.availableGenres = availableGenres;
+    }
+
+    public void filterPosts() {
+        System.out.println("Filtering posts");
+        if ((genres == null || genres.isEmpty()) && (inputFilter == null || inputFilter.isEmpty())) {
+            filteredPosts = posts;
+            return;
+        }
+        filteredPosts = new LinkedList<>();
+        for (Post post : posts) {
+            String[] postGenres = post.getMediaTitle().getGenre().split(", ");
+            if (genres != null && !Collections.disjoint(genres, Arrays.asList(postGenres))) {
+                filteredPosts.add(post);
+            } else if (inputFilter != null && !inputFilter.isEmpty()) {
+                if (post.getMediaTitle().getTitle().toLowerCase().contains(inputFilter.toLowerCase()) || post.getCaption().toLowerCase().contains(inputFilter.toLowerCase())) {
+                    filteredPosts.add(post);
+                }
+            }
+        }
+        System.out.println(filteredPosts);
+    }
+
+    public void setGenres(Set<String> genres) {
+        this.genres = genres;
+    }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
+    }
+
     @Override
     public String toString() {
         return "UserBean{" +
                 "registerUser=" + registerUser +
                 ", loginUser=" + loginUser +
                 ", isUserLoggedIn=" + isUserLoggedIn +
-                ", filter='" + filter + '\'' +
+                ", filter='" + dropdownFilter + '\'' +
                 ", tagStr='" + tagStr + '\'' +
                 ", loginOutText='" + loginOutText + '\'' +
                 ", globalBean=" + globalBean +

@@ -21,144 +21,131 @@
     <components:navbar/>
 
     <div style="flex: 1; overflow: auto">
-<div class="container">
+        <div class="container">
 
-    <!--shown if user is logged in-->
-    <h:panelGroup rendered="#{userBean.userLoggedIn}">
-        <p:dialog header="Create post" widgetVar="postDialog" modal="true" draggable="false" resizable="false"
-                  responsive="true" showHeader="true" closeOnEscape="true">
-            <h:form binding="#{postForm}">
-                <p> Title: <p:autoComplete id="titleInput" value="#{userBean.inputPost.mediaTitle}"
-                                           panelStyleClass="autocomplete-dropdown"
-                                           minQueryLength="1" maxResults="10" maxlength="100"
-                                           emptyMessage="No titles found in the database" cache="true" cacheTimeout="30"
-                                           autoSelection="true" autoHighlight="true"
-                                           var="title" converter="mediaTitleConverter"
-                                           itemLabel="#{title.title}" itemValue="#{title}"
-                                           completeMethod="#{userBean.mediaTitleDropdown}"
-                                           placeholder="Enter a title.." dynamic="true"
-                                           required="true" requiredMessage="Please enter a media title">
-                    <p:ajax event="itemSelect" listener="#{userBean.dropdownItemSelected}" update="genreInput"/>
+            <!--shown if user is logged in-->
+            <h:panelGroup rendered="#{userBean.userLoggedIn}">
+                <p:dialog header="Create post" widgetVar="postDialog" modal="true" draggable="false" resizable="false"
+                          responsive="true" showHeader="true" closeOnEscape="true">
+                    <h:form binding="#{postForm}">
+                        <p> Title: <p:autoComplete id="titleInput" value="#{userBean.inputPost.mediaTitle}"
+                                                   panelStyleClass="autocomplete-dropdown"
+                                                   minQueryLength="1" maxResults="10" maxlength="100"
+                                                   emptyMessage="No titles found in the database" cache="true"
+                                                   cacheTimeout="30"
+                                                   autoSelection="true" autoHighlight="true"
+                                                   var="title" converter="mediaTitleConverter"
+                                                   itemLabel="#{title.title}" itemValue="#{title}"
+                                                   completeMethod="#{userBean.mediaTitleDropdown}"
+                                                   placeholder="Enter a title.." dynamic="true"
+                                                   required="true" requiredMessage="Please enter a media title">
+                            <p:ajax event="itemSelect" listener="#{userBean.dropdownItemSelected}" update="genreInput"/>
 
-                    <p:column>
-                        <table>
-                            <tr>
-                                <td><h:graphicImage style=" vertical-align: middle; margin-right: 5px"
-                                                    url="#{title.imgUrl}" height="50"/></td>
-                                <td><h:outputText style="vertical-align: middle"
-                                                  value="#{userBean.boldMatchedText(title.title)}"
-                                                  escape="false"/> / #{title.genre} #{title.suggested ? " (suggested)" : ""}
-                                </td>
-                            </tr>
-                        </table>
-                    </p:column>
+                            <p:column>
+                                <table>
+                                    <tr>
+                                        <td><h:graphicImage style=" vertical-align: middle; margin-right: 5px"
+                                                            url="#{title.imgUrl}" height="50"/></td>
+                                        <td><h:outputText style="vertical-align: middle"
+                                                          value="#{userBean.boldMatchedText(title.title)}"
+                                                          escape="false"/> / #{title.genre} #{title.suggested ? " (suggested)" : ""}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:column>
 
-                </p:autoComplete>
-                    &nbsp;Genre: <p:inputText id="genreInput" value="#{userBean.inputPost.mediaTitle.genre}"
-                                              required="true" placeholder="Enter a genre.."
-                                              requiredMessage="Please enter a genre"/>
-                </p>
+                        </p:autoComplete>
+                            &nbsp;Genre: <p:inputText id="genreInput" value="#{userBean.inputPost.mediaTitle.genre}"
+                                                      required="true" placeholder="Enter a genre.."
+                                                      requiredMessage="Please enter a genre"/>
+                        </p>
 
-                Caption: <p:inputText id="postInput" value="#{userBean.inputPost.caption}" required="true"
-                                      placeholder="Enter a caption.."
-                                      requiredMessage="Please enter a caption"/>
-                &nbsp;Rating: <cp:ratingComposite id="ratingInput" value="#{userBean.inputPost.rating}"
-                                                  required="true"
-                                                  cancel="false" style="display: inline-block"
-                                                  requiredMessage="Please enter a rating"
-                                                  validator="#{userBean.validateRating}"
-                                                  stars="3" tooltipValue="Garbage|Good|Great"/>
-                <p/>
-                <p:commandButton value="Submit Post" ajax="true" action="#{userBean.submitPost}"
-                                 update="@form content-feed"
-                                 oncomplete="if (args &amp;&amp; !args.validationFailed) PF('postDialog').hide();">
-                </p:commandButton>
-                <p:messages rendered="#{postForm.submitted}" infoClass="errorMsg" errorClass="errorMsg"
-                            redisplay="false"
-                            id="post_msgs"/>
-            </h:form>
-        </p:dialog>
-        <h:form>
-            Tags:
-            <p:inputText id="tagInput" value="#{userBean.tagStr}">
-                <f:ajax event="keyup" render="content-feed"/>
-            </p:inputText>
-            <br/>
-            <p:commandButton value="Log out" ajax="true" action="#{userBean.logOut}">
-                <f:ajax execute="@form" render="@all"/>
-            </p:commandButton>
-        </h:form>
+                        Caption: <p:inputText id="postInput" value="#{userBean.inputPost.caption}" required="true"
+                                              placeholder="Enter a caption.."
+                                              requiredMessage="Please enter a caption"/>
+                        &nbsp;Rating: <cp:ratingComposite id="ratingInput" value="#{userBean.inputPost.rating}"
+                                                          required="true"
+                                                          cancel="false" style="display: inline-block"
+                                                          requiredMessage="Please enter a rating"
+                                                          validator="#{userBean.validateRating}"
+                                                          stars="3" tooltipValue="Garbage|Good|Great"/>
+                        <p/>
+                        <p:commandButton value="Submit Post" ajax="true" action="#{userBean.submitPost}"
+                                         update="@form content-feed"
+                                         oncomplete="if (args &amp;&amp; !args.validationFailed) PF('postDialog').hide();">
+                        </p:commandButton>
+                        <p:messages rendered="#{postForm.submitted}" infoClass="errorMsg" errorClass="errorMsg"
+                                    redisplay="false"
+                                    id="post_msgs"/>
+                    </h:form>
+                </p:dialog>
+            </h:panelGroup>
 
-    </h:panelGroup>
+            <h1>Content Feed</h1>
+            <div id="feed-container">
 
-    <h1>Content Feed</h1>
-    <div id="feed-container">
+                <div id="sidebar-search">
+                    <h3>Search</h3>
 
-        <div id="sidebar-search">
-            <h3>Search</h3>
-
-            <h:form>
-                <h4 class="search-header">Media Category</h4>
-                <p:selectManyCheckbox layout="pageDirection" value="#{searchBean.categories}">
-                    <f:selectItem itemValue="movies" itemLabel="Movies"/>
-                    <f:selectItem itemValue="tv" itemLabel="TV Shows"/>
-                    <f:selectItem itemValue="documentaries" itemLabel="Documentaries"/>
-                    <f:selectItem itemValue="podcasts" itemLabel="Podcasts"/>
-                </p:selectManyCheckbox>
-
-                <h4 class="search-header">Genre</h4>
-                <p:selectManyCheckbox layout="pageDirection" value="#{searchBean.genres}">
-                    <f:selectItem itemValue="scifi" itemLabel="Sci-Fi"/>
-                    <f:selectItem itemValue="nonfiction" itemLabel="Non-Fiction"/>
-                    <f:selectItem itemValue="fantasy" itemLabel="Fantasy"/>
-                    <f:selectItem itemValue="mystery" itemLabel="Mystery"/>
-                    <f:selectItem itemValue="action" itemLabel="Action"/>
-                    <f:selectItem itemValue="comedy" itemLabel="Comedy"/>
-                </p:selectManyCheckbox>
-                <br/>
-                <p:commandButton value="Search" action="#{searchBean.search}"/>
-            </h:form>
-        </div>
-
-        <h:panelGroup layout="block" id="content-feed">
-            <ui:repeat value="#{searchBean.posts}" var="post">
-                <div class="post">
-                    <h:graphicImage url="#{post.mediaTitle.imgUrl}" width="100"/>
-                    <div class="post-content" style="display: inline-block; vertical-align: top;">
-                        <div class="media-title-container">
-                            <div class="media-title">#{post.mediaTitle.title}</div>
-                            <div class="rating">G-Rating: #{post.getGscore()}</div>
-                        </div>
-                        <div>
-                            <div class="genre">Genre: #{post.mediaTitle.genre}</div>
-                        </div>
-                        <div>
-                            <span class="username">#{post.user.displayName}:</span>
-                            <span class="caption">#{post.caption}</span>
-                        </div>
-
-                        <div class="tag-list">
-                            <ui:repeat value="#{post.tags}" var="tag">
-                                <div class="tag">##{tag}</div>
-                            </ui:repeat>
-                        </div>
-                    </div>
-
-                    <div class="post-footer">
-                        <h:form>
-                            <p:commandLink action="#{userBean.likeOrUnlikePost(post)}" update="@form"
-                                           value="#{post.userLiked(userBean.loginUser) ? 'Unlike' : 'Like'}"
-                                           class="post-interact"/>
-                            <p:commandLink action="#{post.addComment}" value="Comment" class="post-interact"/>
-                            <span class="like-counter">#{post.numLikes} Likes</span>
-                        </h:form>
-                    </div>
+                    <h:form>
+                        <p:inputText id="filterInput" value="#{userBean.inputFilter}">
+                            <f:ajax event="keyup" listener="#{userBean.filterPosts}" render="content-feed"/>
+                        </p:inputText>
+                        <h4 class="search-header">Genre</h4>
+                        <p:selectManyCheckbox layout="pageDirection" value="#{userBean.genres}">
+                            <f:selectItems value="#{userBean.availableGenres}" var="item" itemLabel="#{item}"
+                                           itemValue="#{item}"/>
+                            <f:ajax listener="#{userBean.filterPosts}" render="content-feed"/>
+                        </p:selectManyCheckbox>
+                        <br/>
+                    </h:form>
+                    <h:form>
+                        Tags:
+                        <p:inputText id="tagInput" value="#{userBean.tagStr}">
+                            <f:ajax event="keyup" render="content-feed"/>
+                        </p:inputText>
+                    </h:form>
                 </div>
-            </ui:repeat>
-        </h:panelGroup>
+
+                <h:panelGroup layout="block" id="content-feed">
+                    <ui:repeat value="#{userBean.posts}" var="post">
+                        <div class="post">
+                            <h:graphicImage url="#{post.mediaTitle.imgUrl}" width="100"/>
+                            <div class="post-content" style="display: inline-block; vertical-align: top;">
+                                <div class="media-title-container">
+                                    <div class="media-title">#{post.mediaTitle.title}</div>
+                                    <div class="rating">G-Rating: #{post.getGscore()}</div>
+                                </div>
+                                <div>
+                                    <div class="genre">Genre: #{post.mediaTitle.genre}</div>
+                                </div>
+                                <div>
+                                    <span class="username">#{post.user.displayName}:</span>
+                                    <span class="caption">#{post.caption}</span>
+                                </div>
+
+                                <div class="tag-list">
+                                    <ui:repeat value="#{post.tags}" var="tag">
+                                        <div class="tag">##{tag}</div>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+
+                            <div class="post-footer">
+                                <h:form>
+                                    <p:commandLink action="#{userBean.likeOrUnlikePost(post)}" update="@form"
+                                                   value="#{post.userLiked(userBean.loginUser) ? 'Unlike' : 'Like'}"
+                                                   class="post-interact"/>
+                                    <p:commandLink action="#{post.addComment}" value="Comment" class="post-interact"/>
+                                    <span class="like-counter">#{post.numLikes} Likes</span>
+                                </h:form>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                </h:panelGroup>
+            </div>
+        </div>
     </div>
-</div>
-</div>
     <h:form>
         <!--suppress ReservedWordAsName ide bug with JS anonymous function-->
         <o:socket channel="pushCh" scope="view" onmessage="function(m){console.log(m + ' feed');}">

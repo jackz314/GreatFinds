@@ -90,9 +90,9 @@ public class EMF implements ServletContextListener {
         EntityManager entityManager = getEntityManager();
         List<User> users = entityManager.createNamedQuery("getAllUsers", User.class).getResultList();
         List<MediaTitle> titles = Arrays.asList(
-                new MediaTitle("Fast and Furious", "action"),
-                new MediaTitle("Paddington", "comedy"),
-                new MediaTitle("The Martian", "scifi")
+                new MediaTitle("Fast and Furious", "Action"),
+                new MediaTitle("Paddington", "Comedy"),
+                new MediaTitle("The Martian", "Sci-fi")
         );
         titles.forEach(entityManager::persist);
         saveMovieTitles(entityManager);

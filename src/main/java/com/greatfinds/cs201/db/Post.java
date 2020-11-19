@@ -117,7 +117,7 @@ public class Post implements Serializable {
     }
 
     public boolean userLiked(User user) {
-        if (user == null) return false;
+        if (likedUsers == null || user == null) return false;
         return likedUsers.contains(user.getUserID());
     }
 
