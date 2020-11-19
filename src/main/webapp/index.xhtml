@@ -136,7 +136,6 @@
                                     <p:commandLink action="#{userBean.likeOrUnlikePost(post)}" update="@form"
                                                    value="#{post.userLiked(userBean.loginUser) ? 'Unlike' : 'Like'}"
                                                    class="post-interact"/>
-                                    <p:commandLink action="#{post.addComment}" value="Comment" class="post-interact"/>
                                     <span class="like-counter">#{post.numLikes} Likes</span>
                                 </h:form>
                             </div>

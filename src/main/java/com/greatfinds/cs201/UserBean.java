@@ -211,6 +211,7 @@ public class UserBean implements Serializable {
         Set<String> tags = postHelper.extractTags(tagStr);
         loginUser.setFollowedTags(tags);
         posts = postHelper.getFollowedPosts(tags);
+        filterPosts();
     }
 
     public void populateUserInfo() {
@@ -311,7 +312,9 @@ public class UserBean implements Serializable {
             if (genres != null && !Collections.disjoint(genres, Arrays.asList(postGenres))) {
                 filteredPosts.add(post);
             } else if (inputFilter != null && !inputFilter.isEmpty()) {
-                if (post.getMediaTitle().getTitle().toLowerCase().contains(inputFilter.toLowerCase()) || post.getCaption().toLowerCase().contains(inputFilter.toLowerCase())) {
+                if (post.getMediaTitle().getTitle().toLowerCase().contains(inputFilter.toLowerCase()) ||
+                        post.getCaption().toLowerCase().contains(inputFilter.toLowerCase()) ||
+                        post.getMediaTitle().getGenre().toLowerCase().contains(inputFilter.toLowerCase())) {
                     filteredPosts.add(post);
                 }
             }
