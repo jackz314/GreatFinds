@@ -1,6 +1,7 @@
 package com.greatfinds.cs201;
 
 import com.greatfinds.cs201.db.Post;
+import com.greatfinds.cs201.db.em.EMF;
 
 import javax.ejb.Stateless;
 import javax.enterprise.inject.spi.BeanManager;
@@ -50,7 +51,6 @@ public class PostHelper {
 
     //todo maybe a better way to do this query?
     public List<Post> getFollowedPosts(Set<String> tags) {
-//        TypedQuery<Post> query = entityManager.createNamedQuery("getFollowedPosts", Post.class);
         if (tags == null || tags.isEmpty()) return getAllPosts();
         StringJoiner joiner = new StringJoiner(" OR ", "SELECT p from Post p WHERE ", " ORDER BY p.timestamp DESC");
         int i = 0;
@@ -60,35 +60,19 @@ public class PostHelper {
         }
         String queryStr = joiner.toString();
         System.out.println(queryStr);
+        entityManager.clear();
+        entityManager.clear();
+        entityManager.close();
+        entityManager = EMF.createEntityManager();
         TypedQuery<Post> query = entityManager.createQuery(queryStr, Post.class);
         i = 0;
         for (String tag : tags) query.setParameter("var" + i++, tag);
-        return query.getResultList();
-    }
-
-    // get all posts with the given parameters
-    public List<Post> getPostsWith(List<String> categories, List<String> genres) {
-        StringJoiner joiner = new StringJoiner(" OR ", "SELECT p from Post p WHERE ", "");
-
-        // add category constraints (not implemented as this attribute does not exist yet)
-
-        // add genre constraints
-        int g_index = 0;
-        for (; g_index < genres.size(); g_index++) {
-            joiner.add(":var" + g_index + "= p.mediaTitle.genre");
-        }
-
-        // Finish constructing query
-        String queryStr = joiner.toString();
-        System.out.println(queryStr);
-        TypedQuery<Post> query = entityManager.createQuery(queryStr, Post.class);
-
-        g_index = 0;
-        for (String g : genres) query.setParameter("var" + g_index++, g);
-        return query.getResultList();
+        List<Post> resultList = query.getResultList();
+        return resultList;
     }
 
     public List<Post> getAllPosts() {
+        entityManager.clear();
         return entityManager.createNamedQuery("getAllPosts", Post.class).getResultList();
     }
 

@@ -19,7 +19,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class EMF implements ServletContextListener {
     private static EntityManagerFactory emf;
     private static EntityManager entityManager;
 
-    private static EntityManager getEntityManager() {
+    public static EntityManager getEntityManager() {
         if (entityManager == null) entityManager = createEntityManager();
         return entityManager;
     }
@@ -59,8 +58,9 @@ public class EMF implements ServletContextListener {
         );
         EntityManager entityManager = getEntityManager();
         entityManager.getTransaction().begin();
-        for (User user : users) {
-            user.setFollowedTags(Collections.singleton("all"));
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            user.setFollowedTags(new HashSet<>(Arrays.asList("all", "testTag" + (i + 1))));
             entityManager.persist(user);
         }
         entityManager.getTransaction().commit();
@@ -78,7 +78,7 @@ public class EMF implements ServletContextListener {
             for (MovieDb movie : movies) {
                 if (movie.getTitle() == null) continue;
                 MediaTitle title = TmdbHelper.getMediaTitleFromMovieDb(movie);
-                title.setImgUrl(TmdbHelper.imageBaseUrl + movie.getPosterPath());
+                title.setImgUrl(movie.getPosterPath() == null ? TmdbHelper.imageNotFoundUrl : TmdbHelper.imageBaseUrl + movie.getPosterPath());
                 entityManager.persist(title);
                 ++totalCnt;
             }
@@ -95,7 +95,7 @@ public class EMF implements ServletContextListener {
                 new MediaTitle("The Martian", "Sci-fi")
         );
         titles.forEach(entityManager::persist);
-        saveMovieTitles(entityManager);
+//        saveMovieTitles(entityManager);
         List<Post> posts = Arrays.asList(
                 new Post(users.get(0), titles.get(0), "Vin Diesel is so cool", 3,
                         new HashSet<>(Arrays.asList("all", "testTag1"))),
@@ -124,6 +124,10 @@ public class EMF implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent event) {
         emf.close();
+    }
+
+    public static EntityManagerFactory getEmf() {
+        return emf;
     }
 
     public static EntityManager createEntityManager() {

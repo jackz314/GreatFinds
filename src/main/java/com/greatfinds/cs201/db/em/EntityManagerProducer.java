@@ -11,13 +11,11 @@ public class EntityManagerProducer {
 
   //inject from persistence.xml config, only possible with ejb support
 //  @PersistenceContext(unitName="greatFindsMySQL")
-  private EntityManager entityManager;
+//  private EntityManager entityManager;
 
   @Produces
   public EntityManager entityManager() {
-
     return EMF.createEntityManager();
-//    return entityManager;
   }
 
   private void closeEM(@Disposes EntityManager entityManager) {

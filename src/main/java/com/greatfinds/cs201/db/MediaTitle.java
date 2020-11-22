@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -26,6 +27,8 @@ public class MediaTitle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mediaTitleID;
+
+    private boolean isCustom;
 
     @JoinColumn(name = "genre")
     private String genre;
@@ -67,7 +70,7 @@ public class MediaTitle {
     }
 
     public String getImgUrl() {
-        if (imgUrl == null) {
+        if (imgUrl == null || imgUrl.isEmpty()) {
             populateImgUrl();
         }
         return imgUrl;
@@ -82,18 +85,37 @@ public class MediaTitle {
     }
 
     private void populateImgUrl() {
+        System.out.println("populating " + this);
+        if (isCustom) {
+            imgUrl = TmdbHelper.imageNotFoundUrl;
+            return;
+        }
         TmdbSearch search = TmdbHelper.getTmdbSearch();
-        Multi result = search.searchMulti(getTitle(), "en", 1).getResults().get(0);
+        List<Multi> results = search.searchMulti(getTitle(), "en", 1).getResults();
+        if (results.isEmpty()) {
+            imgUrl = TmdbHelper.imageNotFoundUrl;
+            return;
+        }
+        Multi result = results.get(0);
         switch (result.getMediaType()) {
             case MOVIE -> imgUrl = ((MovieDb) result).getPosterPath();
             case TV_SERIES -> imgUrl = ((TvSeries) result).getPosterPath();
             case PERSON -> imgUrl = ((Person) result).getProfilePath();
         }
-        imgUrl = TmdbHelper.imageBaseUrl + imgUrl;
+        if (imgUrl == null) imgUrl = TmdbHelper.imageNotFoundUrl;
+        else imgUrl = TmdbHelper.imageBaseUrl + imgUrl;
     }
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public boolean isCustom() {
+        return isCustom;
+    }
+
+    public void setCustom(boolean custom) {
+        isCustom = custom;
     }
 
     @Override
@@ -116,7 +138,14 @@ public class MediaTitle {
 
     @Override
     public String toString() {
-        return title + " / " + genre;
+        return "MediaTitle{" +
+                "mediaTitleID=" + mediaTitleID +
+                ", isCustom=" + isCustom +
+                ", genre='" + genre + '\'' +
+                ", title='" + title + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", suggested=" + suggested +
+                '}';
     }
 
     //get an url escaped String that represents the media title, includes title and genre

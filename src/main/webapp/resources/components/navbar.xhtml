@@ -16,11 +16,12 @@
 
 <co:implementation>
     <div id="navbar">
-        <h:outputLink value="index.xhtml"><span style="color: dodgerblue;" class="logo">Great</span><span style="color: slategray;" class="logo">Finds</span></h:outputLink>
+        <h:link outcome="index.xhtml"><span style="color: dodgerblue;" class="logo">Great</span><span
+                style="color: slategray;" class="logo">Finds</span></h:link>
         <ul id="nav-right">
             <ui:fragment
                     rendered="#{userBean.isUserLoggedIn() and (request.requestURI.substring(request.requestURI.lastIndexOf('/')).equals('/index.xhtml') or request.requestURI.lastIndexOf('/') == request.requestURI.length() - 1)}">
-                <li><a href="#" onclick="PF('postDialog').show();">POST</a></li>
+                <li><a href="javascript:void(0)" onclick="PF('postDialog').show();">POST</a></li>
             </ui:fragment>
             <li><h:link value="FEED" outcome="index.xhtml"/></li>
             <li><h:form><h:commandLink value="#{userBean.loginOutText}" action="#{userBean.loginOutRedirect}"/></h:form>

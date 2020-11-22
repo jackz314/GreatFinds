@@ -37,23 +37,24 @@ public class MediaTitleHelper {
 
     public List<MediaTitle> getAllMediaTitles() {
         System.out.println("Getting media titles");
-        return entityManager
-                .createNamedQuery("getAllMediaTitles", MediaTitle.class)
+        entityManager.clear();
+        return entityManager.createNamedQuery("getAllMediaTitles", MediaTitle.class)
                 .getResultList();
     }
 
     // return a list of matched media titles based on the filter string
     // uses %FILTER% match in MySQL
     public List<MediaTitle> getMatchedMediaTitles(String filter) {
-        List<MediaTitle> resultList = entityManager.createNamedQuery("getMatchedMediaTitles", MediaTitle.class)
+        //        System.out.println("MEDIA TITLE RESULT: " + resultList);
+        entityManager.clear();
+        return entityManager.createNamedQuery("getMatchedMediaTitles", MediaTitle.class)
                 .setMaxResults(10)
                 .setParameter("filter", filter)
                 .getResultList();
-//        System.out.println("MEDIA TITLE RESULT: " + resultList);
-        return resultList;
     }
 
     public MediaTitle getExactMatchMediaTitle(String title, String genre) {
+        entityManager.clear();
         return entityManager.createNamedQuery("getExactMatchMediaTitles", MediaTitle.class)
                 .setParameter("title", title)
                 .setParameter("genre", genre)

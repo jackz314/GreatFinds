@@ -30,6 +30,10 @@ public class GlobalBean {
     @Inject
     private MediaTitleHelper titleHelper;
 
+    @Inject
+    @Push
+    private PushContext pushCh;
+
     private final CopyOnWriteArraySet<UserBean> userBeans = new CopyOnWriteArraySet<>();
 
     private List<Post> globalPosts;
@@ -37,10 +41,6 @@ public class GlobalBean {
     private List<User> users;
 
     private List<MediaTitle> titles;
-
-    @Inject
-    @Push
-    private PushContext pushCh;
 
     //like constructor, called after bean is constructed
     @PostConstruct
@@ -61,11 +61,10 @@ public class GlobalBean {
                 case MODIFIED -> globalPosts.set(globalPosts.indexOf(post), post);
             }
             userBeans.forEach(userBean -> userBean.onPostsUpdate(postUpdate));
-
+            pushCh.send("updatePosts");
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        pushCh.send("updatePosts");
     }
 
     //called when a new user is created, thread safe
@@ -101,6 +100,6 @@ public class GlobalBean {
 
     public void unregisterUserBean(UserBean userBean) {
         userBeans.remove(userBean);
-        System.out.println("Unegistered new user bean: " + userBeans.size() + " " + userBeans);
+        System.out.println("Unregistered new user bean: " + userBeans.size() + " " + userBeans);
     }
 }

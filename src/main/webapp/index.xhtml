@@ -18,6 +18,8 @@
 
 <h:body>
 
+    <ds:windowId/>
+
     <components:navbar/>
 
     <div style="flex: 1; overflow: auto">
@@ -28,6 +30,9 @@
                 <p:dialog header="Create post" widgetVar="postDialog" modal="true" draggable="false" resizable="false"
                           responsive="true" showHeader="true" closeOnEscape="true">
                     <h:form binding="#{postForm}">
+                        <p:selectBooleanCheckbox value="#{userBean.customPost}" itemLabel="Disable Suggestions">
+                            <p:ajax update="@form"/>
+                        </p:selectBooleanCheckbox>
                         <p> Title: <p:autoComplete id="titleInput" value="#{userBean.inputPost.mediaTitle}"
                                                    panelStyleClass="autocomplete-dropdown"
                                                    minQueryLength="1" maxResults="10" maxlength="100"
@@ -71,9 +76,8 @@
                                                           stars="3" tooltipValue="Garbage|Good|Great"/>
                         <p/>
                         <p:commandButton value="Submit Post" ajax="true" action="#{userBean.submitPost}"
-                                         update="@form content-feed"
-                                         oncomplete="if (args &amp;&amp; !args.validationFailed) PF('postDialog').hide();">
-                        </p:commandButton>
+                                         update="@form"
+                                         oncomplete="if (args &amp;&amp; !args.validationFailed) PF('postDialog').hide();"/>
                         <p:messages rendered="#{postForm.submitted}" infoClass="errorMsg" errorClass="errorMsg"
                                     redisplay="false"
                                     id="post_msgs"/>
@@ -82,12 +86,12 @@
             </h:panelGroup>
 
             <h1>Content Feed</h1>
-            <div id="feed-container">
+            <h:panelGroup layout="block" id="feed-container">
 
-                <div id="sidebar-search">
+                <h:panelGroup layout="block" id="sidebar-search">
                     <h3>Search</h3>
 
-                    <h:form>
+                    <h:form id="filterForm">
                         <p:inputText id="filterInput" value="#{userBean.inputFilter}">
                             <f:ajax event="keyup" listener="#{userBean.filterPosts}" render="content-feed"/>
                         </p:inputText>
@@ -100,12 +104,12 @@
                         <br/>
                     </h:form>
                     <h:form>
-                        Tags:
+                        #{userBean.userLoggedIn ? 'Tags you follow:' : 'Filter by tags'}
                         <p:inputText id="tagInput" value="#{userBean.tagStr}">
                             <f:ajax event="keyup" render="content-feed"/>
                         </p:inputText>
                     </h:form>
-                </div>
+                </h:panelGroup>
 
                 <h:panelGroup layout="block" id="content-feed">
                     <ui:repeat value="#{userBean.posts}" var="post">
@@ -133,7 +137,8 @@
 
                             <div class="post-footer">
                                 <h:form>
-                                    <p:commandLink action="#{userBean.likeOrUnlikePost(post)}" update="@form"
+                                    <p:commandLink rendered="#{userBean.userLoggedIn}"
+                                                   action="#{userBean.likeOrUnlikePost(post)}" update="@form"
                                                    value="#{post.userLiked(userBean.loginUser) ? 'Unlike' : 'Like'}"
                                                    class="post-interact"/>
                                     <span class="like-counter">#{post.numLikes} Likes</span>
@@ -142,17 +147,15 @@
                         </div>
                     </ui:repeat>
                 </h:panelGroup>
-            </div>
+            </h:panelGroup>
         </div>
     </div>
     <h:form>
         <!--suppress ReservedWordAsName ide bug with JS anonymous function-->
-        <o:socket channel="pushCh" scope="view" onmessage="function(m){console.log(m + ' feed');}">
-            <p:ajax event="updatePosts" update="content-feed"/>
+        <o:socket channel="pushCh" onmessage="function(m){console.log(m + ' feed');}">
+            <f:ajax event="updatePosts" render="content-feed filterForm"/>
         </o:socket>
     </h:form>
-
-    <ds:windowId/>
 </h:body>
 
 </html>

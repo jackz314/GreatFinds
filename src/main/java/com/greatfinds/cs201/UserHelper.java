@@ -27,6 +27,7 @@ public class UserHelper {
     }
 
     public User getCompleteUser(User user) {
+        entityManager.clear();
         return entityManager.createNamedQuery("getUser", User.class)
                 .setParameter("email", user.getEmail())
                 .getSingleResult();
@@ -34,6 +35,7 @@ public class UserHelper {
 
     // return true if user with specified email exists in DB
     public boolean userExists(String email) {
+        entityManager.clear();
         return entityManager.createNamedQuery("userExists", Long.class)
                 .setParameter("email", email)
                 .getSingleResult() == 1;
@@ -41,6 +43,7 @@ public class UserHelper {
 
     // return true if user with email & password match record in database
     public boolean userMatch(String email, String pwd) {
+        entityManager.clear();
         return entityManager.createNamedQuery("userMatches", Long.class)
                 .setParameter("email", email)
                 .setParameter("pwd", pwd)
@@ -49,9 +52,15 @@ public class UserHelper {
 
     public List<User> getAllUsers() {
         System.out.println("Getting users");
-        return entityManager
-                .createNamedQuery("getAllUsers", User.class)
+        entityManager.clear();
+        return entityManager.createNamedQuery("getAllUsers", User.class)
                 .getResultList();
+    }
+
+    public void updateUser(User user) {
+        beginSession();
+        entityManager.merge(user);
+        commit();
     }
 
     private void commit() {

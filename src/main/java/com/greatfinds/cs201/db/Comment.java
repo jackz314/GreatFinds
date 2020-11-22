@@ -12,7 +12,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentID;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "userID")
     private User user;
     private String text;

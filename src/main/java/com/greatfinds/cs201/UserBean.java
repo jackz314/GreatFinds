@@ -5,8 +5,6 @@ import com.greatfinds.cs201.db.Post;
 import com.greatfinds.cs201.db.User;
 import info.movito.themoviedbapi.model.Multi;
 import org.apache.deltaspike.core.api.scope.WindowScoped;
-import org.omnifaces.cdi.Push;
-import org.omnifaces.cdi.PushContext;
 import org.primefaces.event.SelectEvent;
 
 import javax.annotation.PostConstruct;
@@ -43,43 +41,36 @@ public class UserBean implements Serializable {
     @Inject
     transient private GlobalBean globalBean;
 
-    //we're injecting EJB here, not regular CDI, so we don't need to implement serializable and it'll still work
-    @SuppressWarnings("CdiUnproxyableBeanTypesInspection")
     @Inject
     transient private PostHelper postHelper;
     private Post inputPost;
-    private List<Post> posts;
+    private boolean customPost = false;
+    private List<Post> originalPosts;
     private List<Post> filteredPosts;
 
-    private List<String> categories;
     private Set<String> genres;
     private Set<String> availableGenres;
 
-    @SuppressWarnings("CdiUnproxyableBeanTypesInspection")
     @Inject
     transient private MediaTitleHelper mediaTitleHelper;
 
     //same story as above
-    @SuppressWarnings("CdiUnproxyableBeanTypesInspection")
     @Inject
     transient private UserHelper userHelper;
 
-    @Inject
-    @Push
-    private PushContext pushCh;
-
     @PostConstruct
     public void load() {
-        System.out.println("LOADED user bean");
-        posts = postHelper.getAllPosts();//start with guest posts (no filter)
+        uuid = UUID.randomUUID();
+        originalPosts = postHelper.getAllPosts();//start with guest posts (no filter)
         registerUser = new User();
         loginUser = new User();
-        uuid = UUID.randomUUID();
         globalBean.registerUserBean(this);
+        System.out.println("LOADED user bean " + this);
     }
 
     @PreDestroy
     public void unload() {
+        System.out.println("Unloading " + this);
         globalBean.unregisterUserBean(this);
     }
 
@@ -148,8 +139,9 @@ public class UserBean implements Serializable {
         inputPost = new Post();
         Set<String> followedTags = loginUser.getFollowedTags();
         if (followedTags == null || followedTags.isEmpty()) return;//keep default if there's no followed tags
-        posts = postHelper.getFollowedPosts(followedTags);
+        originalPosts = postHelper.getFollowedPosts(followedTags);
         tagStr = "#" + String.join(" #", loginUser.getFollowedTags());
+        updateFilterStuff();
         System.out.println("User logged in: " + loginUser);
     }
 
@@ -171,7 +163,13 @@ public class UserBean implements Serializable {
         isUserLoggedIn = false;
         loginOutText = "LOG IN/REGISTER";
         loginUser = new User();
-        posts = postHelper.getAllPosts();
+        originalPosts = postHelper.getAllPosts();
+        updateFilterStuff();
+    }
+
+    private void updateFilterStuff() {
+        filterPosts();
+        updateAvailableGenres();
     }
 
     public boolean isUserLoggedIn() {
@@ -190,12 +188,12 @@ public class UserBean implements Serializable {
         if (isUserLoggedIn && post.getTags().stream().noneMatch(followedTags::contains)) return;
         try {
             switch (postUpdate.getType()) {
-                case CREATED -> posts.add(0, post);
-                case DELETED -> posts.remove(post);
-                case MODIFIED -> posts.set(posts.indexOf(post), post);
+                case CREATED -> originalPosts.add(0, post);
+                case DELETED -> originalPosts.remove(post);
+                case MODIFIED -> originalPosts.set(originalPosts.indexOf(post), post);
             }
-            updateAvailableGenres();
-            pushCh.send("updatePosts");
+            updateFilterStuff();
+//            pushCh.send("updatePosts", getUuid());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -210,7 +208,8 @@ public class UserBean implements Serializable {
         System.out.println(tagStr);
         Set<String> tags = postHelper.extractTags(tagStr);
         loginUser.setFollowedTags(tags);
-        posts = postHelper.getFollowedPosts(tags);
+        userHelper.updateUser(loginUser);
+        originalPosts = postHelper.getFollowedPosts(tags);
         filterPosts();
     }
 
@@ -219,12 +218,21 @@ public class UserBean implements Serializable {
     }
 
     public List<Post> getPosts() {
-        if (filteredPosts == null) return posts;
+        if (filteredPosts == null) return originalPosts;
+        System.out.println("getting posts " + filteredPosts);
         return filteredPosts;
     }
 
     public Post getInputPost() {
         return inputPost;
+    }
+
+    public boolean isCustomPost() {
+        return customPost;
+    }
+
+    public void setCustomPost(boolean customPost) {
+        this.customPost = customPost;
     }
 
     public String boldMatchedText(String title) {
@@ -239,8 +247,9 @@ public class UserBean implements Serializable {
     public List<MediaTitle> mediaTitleDropdown(String filter) {
         this.dropdownFilter = filter.toLowerCase();
         List<MediaTitle> titles = mediaTitleHelper.getMatchedMediaTitles(filter);
+        if (customPost) return titles;
         List<Multi> results = TmdbHelper.getTmdbSearch().searchMulti(filter, "en", 1).getResults();
-        int num = Math.min(results.size(), 5);
+        int num = Math.min(results.size(), Math.min(5, 10 - titles.size()));
         for (int i = 0; i < num; i++) {
             Multi result = results.get(i);
             MediaTitle title = TmdbHelper.getMediaTitleFromMulti(result);
@@ -261,11 +270,11 @@ public class UserBean implements Serializable {
         if (!isUserLoggedIn) return;
         post.likeOrUnlike(loginUser);
         postHelper.updatePost(post);
-        pushCh.send("updatePosts");
     }
 
     public void submitPost() {
         inputPost.setUser(loginUser);
+        if (customPost) inputPost.getMediaTitle().setCustom(true);
         mediaTitleHelper.processPostMediaTitle(inputPost);
         postHelper.post(inputPost);
         inputPost = new Post();
@@ -277,7 +286,7 @@ public class UserBean implements Serializable {
 
     public void updateAvailableGenres() {
         availableGenres = new HashSet<>();
-        for (Post post : posts) {
+        for (Post post : originalPosts) {
             String[] postGenres = post.getMediaTitle().getGenre().split(", ");
             availableGenres.addAll(Arrays.asList(postGenres));
         }
@@ -301,13 +310,13 @@ public class UserBean implements Serializable {
     }
 
     public void filterPosts() {
-        System.out.println("Filtering posts");
+//        System.out.println("Filtering posts");
         if ((genres == null || genres.isEmpty()) && (inputFilter == null || inputFilter.isEmpty())) {
-            filteredPosts = posts;
+            filteredPosts = new ArrayList<>(originalPosts);
             return;
         }
         filteredPosts = new LinkedList<>();
-        for (Post post : posts) {
+        for (Post post : originalPosts) {
             String[] postGenres = post.getMediaTitle().getGenre().split(", ");
             if (genres != null && !Collections.disjoint(genres, Arrays.asList(postGenres))) {
                 filteredPosts.add(post);
@@ -326,30 +335,18 @@ public class UserBean implements Serializable {
         this.genres = genres;
     }
 
-    public List<String> getCategories() {
-        return categories;
+    public String getUuid() {
+        return uuid.toString();
     }
 
-    public void setCategories(List<String> categories) {
-        this.categories = categories;
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     @Override
     public String toString() {
         return "UserBean{" +
-                "registerUser=" + registerUser +
-                ", loginUser=" + loginUser +
-                ", isUserLoggedIn=" + isUserLoggedIn +
-                ", filter='" + dropdownFilter + '\'' +
-                ", tagStr='" + tagStr + '\'' +
-                ", loginOutText='" + loginOutText + '\'' +
-                ", globalBean=" + globalBean +
-                ", postHelper=" + postHelper +
-                ", inputPost=" + inputPost +
-                ", posts=" + posts +
-                ", mediaTitleHelper=" + mediaTitleHelper +
-                ", userHelper=" + userHelper +
-                ", pushCh=" + pushCh +
+                "uuid=" + getUuid() +
                 '}';
     }
 

@@ -6,7 +6,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,11 +20,11 @@ public class Post implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postID;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "userID")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "mediaTitleID")
     private MediaTitle mediaTitle;
 
@@ -43,10 +42,6 @@ public class Post implements Serializable {
 
     @ElementCollection
     private Set<Long> likedUsers;
-
-    //mapped in comment class
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
 
     /**
      * Create new instance of Post
@@ -74,16 +69,6 @@ public class Post implements Serializable {
         if (this == other) return true;
         if (!(other instanceof Post)) return false;
         return this.postID.equals(((Post) other).postID);
-    }
-
-    public void addComment(Comment comment) {
-        comments.add(comment);
-        comment.setPost(this);
-    }
-
-    public void removeComment(Comment comment) {
-        comments.remove(comment);
-        comment.setPost(null);
     }
 
     public void likeOrUnlike(User user) {
@@ -180,14 +165,6 @@ public class Post implements Serializable {
         this.tags = tags;
     }
 
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
     public Set<Long> getLikedUsers() {
         return likedUsers;
     }
@@ -207,7 +184,6 @@ public class Post implements Serializable {
                 ", numLikes=" + numLikes +
                 ", timestamp=" + timestamp +
                 ", tags=" + tags +
-                ", comments=" + comments +
                 '}';
     }
 }

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class TmdbHelper {
     public final static String imageBaseUrl = "https://image.tmdb.org/t/p/original";
+    public final static String imageNotFoundUrl = "image-not-found.svg";
 
     private static TmdbApi tmdbApi;
     private static TmdbSearch tmdbSearch;
@@ -61,7 +62,7 @@ public class TmdbHelper {
         String genre = "";
         if (movie.getGenres() != null && !movie.getGenres().isEmpty())
             genre = movie.getGenres().stream().map(Genre::getName).collect(Collectors.joining(", "));
-        return new MediaTitle(movie.getTitle(), genre, TmdbHelper.imageBaseUrl + movie.getPosterPath());
+        return new MediaTitle(movie.getTitle(), genre, movie.getPosterPath() == null ? TmdbHelper.imageNotFoundUrl : TmdbHelper.imageBaseUrl + movie.getPosterPath());
     }
 
     public static MediaTitle getMediaTitleFromTvSeries(TvSeries series) {
@@ -76,6 +77,6 @@ public class TmdbHelper {
         String genre = "";
         if (series.getGenres() != null && !series.getGenres().isEmpty())
             genre = series.getGenres().stream().map(Genre::getName).collect(Collectors.joining(", "));
-        return new MediaTitle(series.getName(), genre, TmdbHelper.imageBaseUrl + series.getPosterPath());
+        return new MediaTitle(series.getName(), genre, series.getPosterPath() == null ? TmdbHelper.imageNotFoundUrl : TmdbHelper.imageBaseUrl + series.getPosterPath());
     }
 }

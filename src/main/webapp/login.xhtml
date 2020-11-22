@@ -13,43 +13,44 @@
     </h:panelGroup>
 </h:head>
 
-<components:navbar/>
+<h:body>
+    <components:navbar/>
 
-<!-- User Authentication Form(s) -->
-<h:panelGroup rendered="#{not userBean.userLoggedIn}">
-    <h4>Registration</h4>
-    <h:form binding="#{registerForm}">
-        <p> Username: <p:inputText id="usernameInput" value="#{userBean.registerUser.displayName}" required="true"
-                                   requiredMessage="Please enter a username."/>
-            Email: <p:inputText id="emailInput" value="#{userBean.registerUser.email}" required="true"
-                                requiredMessage="Please enter a valid email."
-                                validator="#{userBean.validateRegisterEmail}"/>
-            Password: <p:password id="pwdInput" value="#{userBean.registerUser.pwd}" required="true"
-                                  requiredMessage="Please enter a password."/>
-        </p>
-        <p:messages rendered="#{registerForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" id="reg_msgs"/>
-        <p:commandButton value="Register" ajax="true" action="#{userBean.register}">
-            <f:ajax execute="@form" render="@form users"/>
-        </p:commandButton>
-    </h:form>
+    <!-- User Authentication Form(s) -->
+    <h:panelGroup rendered="#{not userBean.userLoggedIn}">
+        <h4>Registration</h4>
+        <h:form binding="#{registerForm}">
+            <p> Username: <p:inputText id="usernameInput" value="#{userBean.registerUser.displayName}" required="true"
+                                       requiredMessage="Please enter a username."/>
+                Email: <p:inputText id="emailInput" value="#{userBean.registerUser.email}" required="true"
+                                    requiredMessage="Please enter a valid email."
+                                    validator="#{userBean.validateRegisterEmail}"/>
+                Password: <p:password id="pwdInput" value="#{userBean.registerUser.pwd}" required="true"
+                                      requiredMessage="Please enter a password."/>
+            </p>
+            <p:messages rendered="#{registerForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" id="reg_msgs"/>
+            <p:commandButton value="Register" ajax="true" action="#{userBean.register}">
+                <f:ajax execute="@form" render="@form users"/>
+            </p:commandButton>
+        </h:form>
 
-    <h4>Login</h4>
-    <h:form binding="#{loginForm}">
-        <p> Email: <p:inputText id="emailLogin" value="#{userBean.loginUser.email}" required="true"
-                                requiredMessage="Please enter a valid email. "
-                                validator="#{userBean.validateLoginEmail}"/>
-            Password: <p:password id="pwdLogin" value="#{userBean.loginUser.pwd}"
-                                  required="true" requiredMessage="Please enter a password. "/>
-        </p>
-        <o:validateMultiple components="emailLogin pwdLogin" validator="#{userBean.validateLogin}"
-                            message="Incorrect email or password."/>
-        <p:messages rendered="#{loginForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" redisplay="false"
-                    id="login_msgs"/>
-        <p:commandButton value="Login" ajax="true" action="#{userBean.loginRedirect}">
-            <f:ajax execute="@form" render="@all"/>
-        </p:commandButton>
-    </h:form>
+        <h4>Login</h4>
+        <h:form binding="#{loginForm}">
+            <p> Email: <p:inputText id="emailLogin" value="#{userBean.loginUser.email}" required="true"
+                                    requiredMessage="Please enter a valid email. "
+                                    validator="#{userBean.validateLoginEmail}"/>
+                Password: <p:password id="pwdLogin" value="#{userBean.loginUser.pwd}"
+                                      required="true" requiredMessage="Please enter a password. "/>
+            </p>
+            <o:validateMultiple components="emailLogin pwdLogin" validator="#{userBean.validateLogin}"
+                                message="Incorrect email or password."/>
+            <p:messages rendered="#{loginForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" redisplay="false"
+                        id="login_msgs"/>
+            <p:commandButton value="Login" ajax="true" action="#{userBean.loginRedirect}"/>
+        </h:form>
 
-    <br/>
-</h:panelGroup>
+        <br/>
+    </h:panelGroup>
+</h:body>
+
 </html>

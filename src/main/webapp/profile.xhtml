@@ -15,20 +15,19 @@
         <meta http-equiv="refresh" content="0; URL=login.xhtml"/>
     </h:panelGroup>
 </h:head>
-<body>
+<h:body>
+    <ds:windowId/>
 
-<components:navbar/>
+    <components:navbar/>
 
+    <h:panelGroup layout="block" rendered="#{userBean.userLoggedIn}" id="profile-content">
+        <div class="user-info-label">USERNAME</div>
+        <div class="user-info">#{userBean.loginUser.displayName}</div>
+        <div class="user-info-label">EMAIL</div>
+        <div class="user-info">#{userBean.loginUser.email}</div>
+        <div class="user-info-label">BIO</div>
+        <div class="user-info">#{userBean.loginUser.bio}</div>
+    </h:panelGroup>
 
-<h:panelGroup layout="block" rendered="#{userBean.userLoggedIn}" id="profile-content">
-    <div class="user-info-label">USERNAME</div>
-    <div class="user-info">#{userBean.loginUser.displayName}</div>
-    <div class="user-info-label">EMAIL</div>
-    <div class="user-info">#{userBean.loginUser.email}</div>
-    <div class="user-info-label">BIO</div>
-    <div class="user-info">#{userBean.loginUser.bio}</div>
-</h:panelGroup>
-<ds:windowId/>
-
-</body>
+</h:body>
 </html>
