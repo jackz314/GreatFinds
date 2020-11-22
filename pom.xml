@@ -78,19 +78,6 @@
             <version>1.10</version>
         </dependency>
 
-        <!--        <dependency> &lt;!&ndash; Optional, only when <f:websocket> is used. &ndash;&gt;-->
-        <!--            <groupId>org.glassfish</groupId>-->
-        <!--            <artifactId>jakarta.json</artifactId>-->
-        <!--            <version>1.1.5</version>-->
-        <!--        </dependency>-->
-
-        <!--        JPA - EclipseLink-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.eclipse.persistence</groupId>-->
-        <!--            <artifactId>eclipselink</artifactId>-->
-        <!--            <version>2.7.7</version>-->
-        <!--        </dependency>-->
-
         <!--        JPA - Hibernate-->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -168,45 +155,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--            MySQL stuff-->
-            <!--            <plugin>-->
-            <!--                <groupId>org.codehaus.mojo</groupId>-->
-            <!--                <artifactId>sql-maven-plugin</artifactId>-->
-            <!--                <version>1.5</version>-->
-
-            <!--                <dependencies>-->
-            <!--&lt;!&ndash;                    MySQL jdbc driver &ndash;&gt;-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>mysql</groupId>-->
-            <!--                        <artifactId>mysql-connector-java</artifactId>-->
-            <!--                        <version>8.0.22</version>-->
-            <!--                    </dependency>-->
-            <!--                </dependencies>-->
-
-            <!--                &lt;!&ndash; specify your MySQL server config here &ndash;&gt;-->
-            <!--                <configuration>-->
-            <!--                    <driver>com.mysql.cj.jdbc.Driver</driver>-->
-            <!--                    <url>jdbc:mysql://localhost:3306/</url>-->
-            <!--                    <username>root</username>-->
-<!--                    <password>root</password>-->
-<!--                </configuration>-->
-
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>process-resources</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>execute</goal>-->
-<!--                        </goals>-->
-<!--                        &lt;!&ndash; specific configuration for this execution &ndash;&gt;-->
-<!--                        <configuration>-->
-<!--                            &lt;!&ndash; specify your SQL commands, can be all of the following configurations &ndash;&gt;-->
-<!--                            <url>jdbc:mysql://localhost:3306/</url>-->
-<!--                            <autocommit>true</autocommit>-->
-<!--                            <sqlCommand>create database if not exists GreatFindsDB</sqlCommand>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 </project>
