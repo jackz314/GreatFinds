@@ -41,7 +41,7 @@ public class EMF implements ServletContextListener {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        try (Connection connection = DriverManager.getConnection(getJDBCUrl(), "root", "root");
+        try (Connection connection = DriverManager.getConnection(getJDBCUrl());
              Statement stmt = connection.createStatement()) {
             stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS GreatFindsDB");
             System.out.println("MySQL database created");
@@ -115,9 +115,9 @@ public class EMF implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        createDBIfNotExists(); // uncomment if ran for the first time to create DB
+//        createDBIfNotExists(); // uncomment if ran for the first time to create DB
         emf = Persistence.createEntityManagerFactory("greatFindsMySQL",
-                Collections.singletonMap("javax.persistence.jdbc.url", getJDBCUrl() + "GreatFindsDB"));
+                Collections.singletonMap("javax.persistence.jdbc.url", getJDBCUrl()));
         createTestUsers();
         createTestPosts();
         if (entityManager != null) entityManager.close();
@@ -133,14 +133,15 @@ public class EMF implements ServletContextListener {
     }
 
     public static String getJDBCUrl() {
-        return System.getenv("JDBC_DATABASE_URL");
+        String mysql_database_url = System.getenv("MYSQL_DATABASE_URL");
+        System.out.println("JDBC MYSQL URL: " + mysql_database_url);
+        return mysql_database_url;
     }
 
     public static EntityManager createEntityManager() {
         if (emf == null) {
             throw new IllegalStateException("Servlet context is not initialized yet.");
         }
-
         return emf.createEntityManager();
     }
 
