@@ -205,7 +205,7 @@ public class UserBean implements Serializable {
 
     public void setTagStr(String tagStr) {
         this.tagStr = tagStr;
-        System.out.println(tagStr);
+        System.out.println("new tagStr: " + tagStr);
         Set<String> tags = postHelper.extractTags(tagStr);
         loginUser.setFollowedTags(tags);
         userHelper.updateUser(loginUser);
@@ -219,7 +219,7 @@ public class UserBean implements Serializable {
 
     public List<Post> getPosts() {
         if (filteredPosts == null) return originalPosts;
-        System.out.println("getting posts " + filteredPosts);
+        System.out.println("getting posts " + filteredPosts.size());
         return filteredPosts;
     }
 

@@ -51,7 +51,7 @@ public class UserHelper {
     }
 
     public List<User> getAllUsers() {
-        System.out.println("Getting users");
+        System.out.println("Getting all users");
         entityManager.clear();
         return entityManager.createNamedQuery("getAllUsers", User.class)
                 .getResultList();

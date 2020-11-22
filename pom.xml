@@ -146,27 +146,48 @@
                     <target>14</target>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.heroku</groupId>
+                                    <artifactId>webapp-runner</artifactId>
+                                    <version>9.0.30.0</version>
+                                    <destFileName>webapp-runner.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!--            MySQL stuff-->
-<!--            <plugin>-->
-<!--                <groupId>org.codehaus.mojo</groupId>-->
-<!--                <artifactId>sql-maven-plugin</artifactId>-->
-<!--                <version>1.5</version>-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.codehaus.mojo</groupId>-->
+            <!--                <artifactId>sql-maven-plugin</artifactId>-->
+            <!--                <version>1.5</version>-->
 
-<!--                <dependencies>-->
-<!--&lt;!&ndash;                    MySQL jdbc driver &ndash;&gt;-->
-<!--                    <dependency>-->
-<!--                        <groupId>mysql</groupId>-->
-<!--                        <artifactId>mysql-connector-java</artifactId>-->
-<!--                        <version>8.0.22</version>-->
-<!--                    </dependency>-->
-<!--                </dependencies>-->
+            <!--                <dependencies>-->
+            <!--&lt;!&ndash;                    MySQL jdbc driver &ndash;&gt;-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>mysql</groupId>-->
+            <!--                        <artifactId>mysql-connector-java</artifactId>-->
+            <!--                        <version>8.0.22</version>-->
+            <!--                    </dependency>-->
+            <!--                </dependencies>-->
 
-<!--                &lt;!&ndash; specify your MySQL server config here &ndash;&gt;-->
-<!--                <configuration>-->
-<!--                    <driver>com.mysql.cj.jdbc.Driver</driver>-->
-<!--                    <url>jdbc:mysql://localhost:3306/</url>-->
-<!--                    <username>root</username>-->
+            <!--                &lt;!&ndash; specify your MySQL server config here &ndash;&gt;-->
+            <!--                <configuration>-->
+            <!--                    <driver>com.mysql.cj.jdbc.Driver</driver>-->
+            <!--                    <url>jdbc:mysql://localhost:3306/</url>-->
+            <!--                    <username>root</username>-->
 <!--                    <password>root</password>-->
 <!--                </configuration>-->
 

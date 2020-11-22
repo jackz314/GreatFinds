@@ -59,7 +59,7 @@ public class PostHelper {
             joiner.add(s);
         }
         String queryStr = joiner.toString();
-        System.out.println(queryStr);
+        System.out.println("followed posts query: " + queryStr);
         entityManager.clear();
         entityManager.clear();
         entityManager.close();
@@ -67,8 +67,7 @@ public class PostHelper {
         TypedQuery<Post> query = entityManager.createQuery(queryStr, Post.class);
         i = 0;
         for (String tag : tags) query.setParameter("var" + i++, tag);
-        List<Post> resultList = query.getResultList();
-        return resultList;
+        return query.getResultList();
     }
 
     public List<Post> getAllPosts() {
