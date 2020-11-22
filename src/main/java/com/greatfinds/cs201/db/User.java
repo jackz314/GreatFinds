@@ -39,6 +39,10 @@ public class User implements Serializable {
 
     }
 
+    public User(User user) {
+        this(user.displayName, user.email, user.pwd);
+    }
+
     public Set<String> getFollowedTags() {
         return followedTags;
     }
@@ -47,7 +51,9 @@ public class User implements Serializable {
         this.followedTags = followedTags;
     }
 
-    public String getDisplayName() { return displayName == null ? "" : displayName; }
+    public String getDisplayName() {
+        return displayName == null ? "" : displayName;
+    }
 
     public void setDisplayName(String name) {
         this.displayName = name;
