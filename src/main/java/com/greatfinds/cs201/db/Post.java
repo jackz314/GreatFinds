@@ -4,8 +4,11 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 @Entity
@@ -171,6 +174,10 @@ public class Post implements Serializable {
 
     public void setLikedUsers(Set<Long> likedUsers) {
         this.likedUsers = likedUsers;
+    }
+
+    public String getTimestampStr() {
+        return new SimpleDateFormat("dd MMM YYYY, HH:mm:ss").format(timestamp);
     }
 
     @Override

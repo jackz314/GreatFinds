@@ -116,6 +116,7 @@
                         <div class="post">
                             <h:graphicImage url="#{post.mediaTitle.imgUrl}" width="100"/>
                             <div class="post-content" style="display: inline-block; vertical-align: top;">
+                                <div class="caption">#{post.timestampStr}</div>
                                 <div class="media-title-container">
                                     <div class="media-title">#{post.mediaTitle.title}</div>
                                     <div class="rating">G-Rating: #{post.getGscore()}</div>
