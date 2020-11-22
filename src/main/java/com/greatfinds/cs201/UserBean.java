@@ -133,6 +133,9 @@ public class UserBean implements Serializable {
 
     public String registerRedirect() {
         register();
+        loginUser = registerUser;
+        registerUser = new User();
+        login();
         return "index.xhtml?faces-redirect=true";
     }
 
