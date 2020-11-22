@@ -19,6 +19,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class EMF implements ServletContextListener {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "root");
+        try (Connection connection = DriverManager.getConnection(getJDBCUrl(), "root", "root");
              Statement stmt = connection.createStatement()) {
             stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS GreatFindsDB");
             System.out.println("MySQL database created");
@@ -115,7 +116,8 @@ public class EMF implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
         createDBIfNotExists(); // uncomment if ran for the first time to create DB
-        emf = Persistence.createEntityManagerFactory("greatFindsMySQL");
+        emf = Persistence.createEntityManagerFactory("greatFindsMySQL",
+                Collections.singletonMap("javax.persistence.jdbc.url", getJDBCUrl() + "GreatFindsDB"));
         createTestUsers();
         createTestPosts();
         if (entityManager != null) entityManager.close();
@@ -128,6 +130,10 @@ public class EMF implements ServletContextListener {
 
     public static EntityManagerFactory getEmf() {
         return emf;
+    }
+
+    public static String getJDBCUrl() {
+        return System.getenv("JDBC_DATABASE_URL");
     }
 
     public static EntityManager createEntityManager() {
