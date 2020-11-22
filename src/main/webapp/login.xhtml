@@ -29,7 +29,7 @@
                                       requiredMessage="Please enter a password."/>
             </p>
             <p:messages rendered="#{registerForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" id="reg_msgs"/>
-            <p:commandButton value="Register" ajax="true" action="#{userBean.registerRedirect}"/>
+            <p:commandButton value="Register" ajax="true" action="#{userBean.registerRedirect}" update="@form"/>
         </h:form>
 
         <h4>Login</h4>
@@ -42,9 +42,8 @@
             </p>
             <o:validateMultiple components="emailLogin pwdLogin" validator="#{userBean.validateLogin}"
                                 message="Incorrect email or password."/>
-            <p:messages rendered="#{loginForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" redisplay="false"
-                        id="login_msgs"/>
-            <p:commandButton value="Login" ajax="true" action="#{userBean.loginRedirect}"/>
+            <p:messages rendered="#{loginForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" id="login_msgs"/>
+            <p:commandButton value="Login" ajax="true" action="#{userBean.loginRedirect}" update="@form"/>
         </h:form>
 
         <br/>
