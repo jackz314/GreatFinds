@@ -3,7 +3,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:o="http://omnifaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
       xmlns:components="http://java.sun.com/jsf/composite/components" xmlns:p="http://primefaces.org/ui">
 <h:head>
     <h:outputStylesheet name="css/styles.css"/>
@@ -29,9 +29,7 @@
                                       requiredMessage="Please enter a password."/>
             </p>
             <p:messages rendered="#{registerForm.submitted}" infoClass="errorMsg" errorClass="errorMsg" id="reg_msgs"/>
-            <p:commandButton value="Register" ajax="true" action="#{userBean.register}">
-                <f:ajax execute="@form" render="@form users"/>
-            </p:commandButton>
+            <p:commandButton value="Register" ajax="true" action="#{userBean.registerRedirect}"/>
         </h:form>
 
         <h4>Login</h4>

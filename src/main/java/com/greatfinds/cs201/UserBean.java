@@ -131,6 +131,11 @@ public class UserBean implements Serializable {
         userHelper.registerUser(registerUser);
     }
 
+    public String registerRedirect() {
+        register();
+        return "index.xhtml?faces-redirect=true";
+    }
+
     public void login() {
 //        isUserLoggedIn = userHelper.userMatch(loginUser.getEmail(), loginUser.getPwd());
         isUserLoggedIn = true;
